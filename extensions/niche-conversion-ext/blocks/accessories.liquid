@@ -1,0 +1,32 @@
+
+
+{% assign accesories =  product.metafields.my_fields.sponsor.value %}
+<div class = "product-grid">
+{% for product in accesories  %}
+  <div class="product">
+      <a href="#" class="product-link">
+       <!-- <img src="{{ product.featured_media | image_url: width: 360 }}" > -->
+        {{ product.featured_image | image_url: width: 400, height: 400 | image_tag: loading: 'lazy' }}
+        <h3>{{product.title}}</h3>
+        <p>{{product.price | money}}</p>
+      </a>
+      <button class="add-to-cart" data-product-id="1">Add to Cart</button>
+    </div>
+{% endfor %}
+</div>
+
+
+{% schema %}
+  {
+    "name": "Hello World",
+    "target": "section",
+    "enabled_on": {
+      "templates": ["product"]
+    },
+    "stylesheet": "app.css",
+    "javascript": "app.js",
+    "settings": [
+        { "label": "Color", "id": "color", "type": "color", "default": "#000000" }
+    ]
+  }
+{% endschema %}
