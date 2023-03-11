@@ -9,6 +9,8 @@ import {
   DisplayText,
   Button,
   TextStyle,
+  Layout,
+  Thumbnail
   
 } from "@shopify/polaris";
 import "../assets/style.css"
@@ -111,7 +113,8 @@ export function MetafieldListAlt() {
     <>
     {parentProduct ? (
       <>
-
+     <Layout>
+      <Layout.Section oneHalf>
     <Card
         title= {parentProduct.title}
         sectioned
@@ -125,6 +128,10 @@ export function MetafieldListAlt() {
           
         </TextContainer>
       </Card>
+      </Layout.Section>
+      <Layout.Section oneHalf>
+      </Layout.Section>
+      </Layout>
     <div class = "row">
     
      { products.length > 0 ? ( 

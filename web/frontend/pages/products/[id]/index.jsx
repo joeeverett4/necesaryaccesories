@@ -14,7 +14,10 @@ import { MetafieldList, MetafieldListAlt } from "../../../components";
 
 export default function index() {
   return (
-    <Page fullWidth>
+    <Page 
+    fullWidth
+    breadcrumbs={[{content: 'Products', url: '/'}]}
+    >
     
     <Layout>
      

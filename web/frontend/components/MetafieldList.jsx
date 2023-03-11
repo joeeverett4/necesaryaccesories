@@ -21,10 +21,11 @@ export function MetafieldList() {
       });
 
     // Fetch the products for the current page
-    fetch(`/api/products?page=${currentPage}&limit=${productsPerPage}`)
+    fetch(`/api/products?limit=${productsPerPage}`)
       .then(response => response.json())
       .then(products => {
         setProducts(products);
+        console.log(products)
       });
   }, [currentPage]);
 
@@ -62,7 +63,7 @@ export function MetafieldList() {
         renderItem={(product) => {
           const { title, price,  } = product;
           const image = product.images[0]?.src
-          console.log(image)
+          console.log(product)
           const media = product.images[0] ? <Thumbnail source = {image} /> : null;
 
           return (

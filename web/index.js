@@ -35,6 +35,15 @@ app.use("/api/*", shopify.validateAuthenticatedSession());
 
 app.use(express.json());
 
+app.get('/api/product/count', async (req, res) => {
+ const countproducts =  await shopify.api.rest.Product.count({
+    session: res.locals.shopify.session,
+  });
+
+  res.send(countproducts)
+
+})
+
 // Endpoint to get a page of products
 app.get('/api/product/:productId', async (req, res) => {
   try {
@@ -51,13 +60,50 @@ app.get('/api/product/:productId', async (req, res) => {
 });
 
 // Endpoint to get a page of products
-app.get('/api/products', async (req, res) => {
+app.get('/api/products/:cursor', async (req, res) => {
   try {
-    const products =  await shopify.api.rest.Product.all({
-      session: res.locals.shopify.session,
-    });
-    
-    res.json(products);
+   const cursor = req.params.cursor
+   console.log(cursor)
+    const client = new shopify.api.clients.Graphql({session: res.locals.shopify.session});
+const data = await client.query({
+  data: `query {
+    products(first: 50, after: "${cursor}") {
+      edges {
+        node {
+          id
+          title
+          handle
+          vendor
+          images(first: 1) {
+            edges {
+              node {
+                originalSrc
+              }
+            }
+          }
+          variants(first: 1) {
+            nodes {
+              price
+            }
+          }
+          
+          
+        }
+        
+        cursor
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }`,
+});
+
+console.log(data.body.data.products.pageInfo.endCursor)
+
+   res.json(data.body.data.products)
+   
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

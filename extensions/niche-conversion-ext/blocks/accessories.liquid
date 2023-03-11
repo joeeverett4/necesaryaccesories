@@ -1,16 +1,18 @@
 
 
 {% assign accesories =  product.metafields.my_fields.sponsor.value %}
-<div class = "product-grid">
+<h1 style = "text-align:center;">Accesories</h1>
+<div class = "outfoss-product-grid">
+
 {% for product in accesories  %}
-  <div class="product">
-      <a href="#" class="product-link">
+  <div class="outfoss-product">
+      <a href="#" class="outfoss-product-link">
        <!-- <img src="{{ product.featured_media | image_url: width: 360 }}" > -->
-        {{ product.featured_image | image_url: width: 400, height: 400 | image_tag: loading: 'lazy' }}
+        {{ product.featured_image | image_url: height: 200 | image_tag: loading: 'lazy' }}
         <h3>{{product.title}}</h3>
         <p>{{product.price | money}}</p>
       </a>
-      <button class="add-to-cart" data-product-id="1">Add to Cart</button>
+      <button class="outfoss-add-to-cart" data-product-id="1">Add to Cart</button>
     </div>
 {% endfor %}
 </div>

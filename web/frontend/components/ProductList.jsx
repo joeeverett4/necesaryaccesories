@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ResourceList, TextStyle, Pagination } from '@shopify/polaris';
+import { ResourceList, TextStyle, Pagination, Thumbnail } from '@shopify/polaris';
 import { useAuthenticatedFetch } from "../hooks";
 
 export function ProductList() {
@@ -11,7 +11,7 @@ export function ProductList() {
 
   useEffect(() => {
     // Fetch the total number of products
-    fetch('/api/products/count')
+    fetch('/api/product/count')
       .then(response => response.text())
       .then(totalCount => {
         // Calculate the total number of pages
@@ -28,6 +28,7 @@ export function ProductList() {
   }, [currentPage]);
 
   const handlePageChange = (newPage) => {
+    console.log("handlePage")
     setCurrentPage(newPage);
   };
 
@@ -38,12 +39,16 @@ export function ProductList() {
         items={products}
         renderItem={(product) => {
           const { title, price } = product;
-
+          const image = product.images[0]?.src
+          console.log(product)
+          const media = product.images[0] ? <Thumbnail source = {image} /> : null;
+          console.log(media)
           return (
             <ResourceList.Item
               id={product.id}
               accessibilityLabel={`View details for ${title}`}
               url={`/products/${product.id}`}
+              media = {media}
             >
               <h3>
                 <TextStyle variation="strong">{title}</TextStyle>
@@ -55,7 +60,7 @@ export function ProductList() {
       />
 
       <Pagination
-        hasNext={currentPage < totalPages}
+        hasNext={true}
         hasPrevious={currentPage > 1}
         onNext={() => handlePageChange(currentPage + 1)}
         onPrevious={() => handlePageChange(currentPage - 1)}
