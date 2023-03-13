@@ -14,11 +14,19 @@ window.onload = async function () {
       //colors
        button.addEventListener("click", function () {
            console.log("button is clicking")
-        let show = button.getAttribute("open");
-        /*
-        if (show == "false") {
+        let show = button.getAttribute("data-show");
+        
+        if (show == "true") {
           let toast = button.nextElementSibling;
-          
+          console.log("THIS IS TOAST")
+          console.log(toast)
+          const newleft = button.offsetLeft;
+          const newtop = button.offsetTop + 20;
+          toast.style.left = newleft + "px";
+          toast.style.top = newtop + "px"; 
+          console.log("Left position: ", newleft);
+          console.log("Top position: ", newtop);
+
           if (toast.style.display === "none") {
             toast.style.display = "block";
             // button.click();
@@ -30,13 +38,16 @@ window.onload = async function () {
          `;
   
             return;
-          } else {
+          } 
+        
+          
+          else {
             toast.style.display = "none";
             button.innerHTML = "Add to Cart";
             return;
           }
         }
-        */
+        
         let productid = button.getAttribute("data-product-id");
         
         console.log("this is productid " + productid)
@@ -84,13 +95,14 @@ window.onload = async function () {
     });
   
     //variants
-  /*
+  
     let toastItems = document.querySelectorAll(".toast-list li");
   
     toastItems.forEach(async function (toastItem) {
-      let ans = toastItem.getAttribute("data-variant");
-      let variantID = ans.split("/").pop();
+      let variantID = toastItem.getAttribute("data-variant-id");
+      //let variantID = ans.split("/").pop();
       toastItem.addEventListener("click", function () {
+        console.log(variantID)
         const parentUl = toastItem.parentElement;
         
         const parentBtn = parentUl.parentElement;
@@ -131,7 +143,7 @@ window.onload = async function () {
         sleep(1000)
           .then(function () {
             siblingBtn.innerHTML = "Add to Cart";
-            console.log("add to cart");
+            console.log("add to cartvariant");
             alert("added succsesfulyys");
           })
           .catch((error) => {
@@ -140,7 +152,7 @@ window.onload = async function () {
       });
     });
   
-   */
+   
   
     //collection title
   

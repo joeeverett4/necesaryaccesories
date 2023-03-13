@@ -57,7 +57,10 @@ a{
   font-weight: 400;
   line-height: 1;
   margin: 20px;
-  padding: 1.2em 5.8em;
+  width:300px;
+  height:40px;
+  justify-content: center;
+  align-items: center;
   text-decoration: none;
   text-align: center;
   text-transform: uppercase;
@@ -211,13 +214,15 @@ a{
 }
 
 .toast{
-  display:none;
+ position:absolute;
 }
 
 .toast-list{
   display: flex;
   flex-direction: column;
   margin-top: 20px;
+  padding-inline-start: 0px;
+  width:300px;
 }
 
 .toast-list li{
@@ -226,7 +231,6 @@ a{
   background: #073c4a;
   color: white;
   border-bottom: 1px solid white;
-  width: 81%;
   margin-bottom:0px;
 }
 
