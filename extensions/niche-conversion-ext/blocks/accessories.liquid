@@ -12,7 +12,14 @@
         <h3>{{product.title}}</h3>
         <p>{{product.price | money}}</p>
       </a>
-      <button class="outfoss-add-to-cart" data-product-id="1">Add to Cart</button>
+      <button class="outfoss-add-to-cart" {% if product.has_only_default_variant == false %} data-show = "show" {% endif %} data-product-id="{{product.variants[0].id}}">Add to Cart</button>
+       <div class = "toast" style = "display:none">
+          <ul class = "toast-list">
+          {% for variant in product.variants %}
+           <li data-variant-id = "{{variant.id}}">{{variant.title}}</li>
+          {% endfor %}
+          </ul>
+       </div>
     </div>
 {% endfor %}
 </div>
