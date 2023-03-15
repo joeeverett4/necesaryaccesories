@@ -21,7 +21,7 @@ window.onload = async function () {
           console.log("THIS IS TOAST")
           console.log(toast)
           const newleft = button.offsetLeft;
-          const newtop = button.offsetTop + 20;
+          const newtop = button.offsetTop + 50;
           toast.style.left = newleft + "px";
           toast.style.top = newtop + "px"; 
           console.log("Left position: ", newleft);

@@ -1,7 +1,8 @@
 
 
 {% assign accesories =  product.metafields.my_fields.sponsor.value %}
-<h1 style = "text-align:center;">Accesories</h1>
+<h1 style = "text-align:center;">{{block.settings.heading}}</h1>
+<h1>COCK</H1>
 <div class = "outfoss-product-grid">
 
 {% for product in accesories  %}
@@ -12,11 +13,11 @@
         <h3>{{product.title}}</h3>
         <p>{{product.price | money}}</p>
       </a>
-      <button class="outfoss-add-to-cart" {% if product.has_only_default_variant == false %} data-show = "true" {% endif %}  data-product-id="{{product.variants[0].id}}"><span>Add to Cart</span></button>
+      <button class="outfoss-add-to-cart" style = "background-color:{{block.settings.cartbackgroundcolor}}" {% if product.has_only_default_variant == false %} data-show = "true" {% endif %}  data-product-id="{{product.variants[0].id}}"><span style = "color:{{block.settings.carttextcolor}}">Add to Cart</span></button>
        <div class = "toast" style = "display:none;">
           <ul class = "toast-list">
           {% for variant in product.variants %}
-           <li data-variant-id = "{{variant.id}}">{{variant.title}}</li>
+           <li style = "background-color:{{block.settings.cartbackgroundcolor}}; color:{{block.settings.carttextcolor}}"  data-variant-id = "{{variant.id}}"><span>{{variant.title}}</span><span style = "margin-left:11px;">{{variant.price | money}}</span></li>
           {% endfor %}
           </ul>
        </div>
@@ -35,7 +36,25 @@
     "stylesheet": "app.css",
     "javascript": "app.js",
     "settings": [
-        { "label": "Color", "id": "color", "type": "color", "default": "#000000" }
+       
+       {
+      "id": "heading",
+      "type": "text",
+      "label": "Accesories",
+      "default": "Accesories"
+      },
+        { 
+        "label": "Cart Text Color", 
+        "id": "carttextcolor", 
+        "type": "color", 
+        "default": "#000000"
+         },
+          { 
+        "label": "Cart Background Color", 
+        "id": "cartbackgroundcolor", 
+        "type": "color", 
+        "default": "#fff"
+         }
     ]
   }
 {% endschema %}

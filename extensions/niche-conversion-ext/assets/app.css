@@ -215,6 +215,7 @@ a{
 
 .toast{
  position:absolute;
+ z-index:999;
 }
 
 .toast-list{
@@ -228,10 +229,9 @@ a{
 .toast-list li{
   list-style-type: none;
   padding: 15px 5px 15px 11px;
-  background: #073c4a;
-  color: white;
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid black;
   margin-bottom:0px;
+  display:flex;
 }
 
  .zyzicon {
