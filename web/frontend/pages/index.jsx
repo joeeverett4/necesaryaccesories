@@ -11,9 +11,6 @@ import {
 import { TitleBar } from "@shopify/app-bridge-react";
 
 import { trophyImage } from "../assets";
-import { PaginationExample } from "../components";
-import { ProductList } from "../components";
-import { ResourceListFiltersExample } from "../components";
 import { IndexTableWithAllElementsExample } from "../components";
 
 export default function HomePage() {

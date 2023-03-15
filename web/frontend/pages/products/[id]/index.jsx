@@ -10,7 +10,7 @@ import {
     Link,
     Heading,
   } from "@shopify/polaris";
-import { MetafieldList, MetafieldListAlt } from "../../../components";
+import { MetafieldListAlt } from "../../../components";
 
 export default function index() {
   return (
