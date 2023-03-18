@@ -59,15 +59,72 @@ app.get('/api/product/:productId', async (req, res) => {
   }
 });
 
+
+// get first products
+
+app.get('/api/firstproducts', async (req, res) => {
+  try {
+   
+ 
+     const client = new shopify.api.clients.Graphql({session: res.locals.shopify.session});
+     
+     const data = await client.query({
+   data: `query {
+     products(first: 50, sortKey:TITLE) {
+       edges {
+         node {
+           id
+           title
+           handle
+           vendor
+           images(first: 1) {
+             edges {
+               node {
+                 originalSrc
+               }
+             }
+           }
+           variants(first: 1) {
+             nodes {
+               price
+             }
+           }
+           
+           
+         }
+         
+         cursor
+       }
+       pageInfo {
+         hasNextPage
+         endCursor
+       }
+     }
+   }`,
+ });
+ 
+ 
+ 
+    res.json(data.body.data.products)
+    
+   } catch (error) {
+     res.status(500).json({ error: error.message });
+   }
+})
+
+
+
+
 // Endpoint to get a page of products
 app.get('/api/products/:cursor', async (req, res) => {
   try {
    const cursor = req.params.cursor
 
     const client = new shopify.api.clients.Graphql({session: res.locals.shopify.session});
-const data = await client.query({
+    console.log(cursor)
+    const data = await client.query({
   data: `query {
-    products(first: 50, after: "${cursor}") {
+    products(first: 50, after: "${cursor}", sortKey: TITLE) {
       edges {
         node {
           id
@@ -100,9 +157,9 @@ const data = await client.query({
   }`,
 });
 
+console.log(data.body.data.products.edges[0].node)
 
-
-   res.json(data.body.data.products)
+ res.json(data.body.data.products)
    
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -112,16 +169,10 @@ const data = await client.query({
 app.get('/api/quieries/:query', async (req, res) => {
 
   try{
+
     const searchQuery = req.params.query;
     console.log(searchQuery)
-   /* 
-  let newprods = await shopify.api.rest.Product.all({
-      session: res.locals.shopify.session,
-      title: searchQuery,
-    });
-
-   console.log(newprods) 
-   */
+  
    const client = new shopify.api.clients.Graphql({session:res.locals.shopify.session});
    const data = await client.query({
      data: `query {

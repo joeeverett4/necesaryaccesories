@@ -18,7 +18,7 @@ export function Productlistmain() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [nextUrl, setNextUrl] = useState(
-    "eyJsYXN0X2lkIjo3NDUyNzQ0NDUwMjM5LCJsYXN0X3ZhbHVlIjoiNzQ1Mjc0NDQ1MDIzOSJ9"
+    ""
   );
   const fetch = useAuthenticatedFetch();
   const productsPerPage = 10;
@@ -34,7 +34,26 @@ export function Productlistmain() {
         const Pages = Math.ceil(totalCount / productsPerPage);
         setTotalPages(Pages);
       });
+      if(nextUrl == ""){
+        console.log("FIRSTPRODUCTS")
+      fetch(`/api/firstproducts`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((products) => {
+        const getNodesFromConnections = (connections) => {
+          if (!connections) return [];
+          return products.edges.map(({ node }) => node);
+        };
+        let costa = getNodesFromConnections(products);
 
+        setProducts(costa);
+        console.log(products.pageInfo)
+        setNextUrl(products.pageInfo.endCursor);
+        
+      });
+    }
+    else{  
     // Fetch the products for the current page
     fetch(`/api/products/${nextUrl}`)
       .then((response) => {
@@ -48,9 +67,11 @@ export function Productlistmain() {
         let costa = getNodesFromConnections(products);
 
         setProducts(costa);
+        console.log(products.pageInfo)
         setNextUrl(products.pageInfo.endCursor);
         window.scrollTo(0, 0);
       });
+    }
   }, [currentPage]);
 
   const customers = [
@@ -177,6 +198,7 @@ export function Productlistmain() {
 
   const rowMarkup = products.map(
     ({ id, title, images, vendor, variants }, index) => (
+      
       <IndexTable.Row
         id={id}
         key={id}
@@ -184,7 +206,7 @@ export function Productlistmain() {
         position={index}
       >
         <IndexTable.Cell>
-          <Thumbnail source={images.edges[0].node.originalSrc} />
+          <Thumbnail source={images?.edges[0]?.node?.originalSrc} />
         </IndexTable.Cell>
         <IndexTable.Cell>
           <Link
@@ -196,9 +218,10 @@ export function Productlistmain() {
           </Link>
         </IndexTable.Cell>
         <IndexTable.Cell>{vendor}</IndexTable.Cell>
-        <IndexTable.Cell>{variants.nodes[0].price}</IndexTable.Cell>
+        <IndexTable.Cell>{variants?.nodes[0]?.price}</IndexTable.Cell>
         <IndexTable.Cell>{"testthree"}</IndexTable.Cell>
       </IndexTable.Row>
+      
     )
   );
 
@@ -257,7 +280,7 @@ export function Productlistmain() {
       </IndexTable>
       <Pagination
         hasNext={true}
-        hasPrevious={currentPage > 1}
+        hasPrevious={true}
         onNext={() => handlePageChange(currentPage + 1)}
         onPrevious={() => handlePageChange(currentPage - 1)}
       />
