@@ -52,7 +52,7 @@ app.get('/api/product/:productId', async (req, res) => {
       session: res.locals.shopify.session,
       id: req.params.productId,
     });
-    console.log(productreturn)
+  
     res.json(productreturn)
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -63,7 +63,7 @@ app.get('/api/product/:productId', async (req, res) => {
 app.get('/api/products/:cursor', async (req, res) => {
   try {
    const cursor = req.params.cursor
-   console.log(cursor)
+
     const client = new shopify.api.clients.Graphql({session: res.locals.shopify.session});
 const data = await client.query({
   data: `query {
@@ -100,7 +100,7 @@ const data = await client.query({
   }`,
 });
 
-console.log(data.body.data.products.pageInfo.endCursor)
+
 
    res.json(data.body.data.products)
    
@@ -109,10 +109,59 @@ console.log(data.body.data.products.pageInfo.endCursor)
   }
 });
 
+app.get('/api/quieries/:query', async (req, res) => {
+
+  try{
+    const searchQuery = req.params.query;
+    console.log(searchQuery)
+   /* 
+  let newprods = await shopify.api.rest.Product.all({
+      session: res.locals.shopify.session,
+      title: searchQuery,
+    });
+
+   console.log(newprods) 
+   */
+   const client = new shopify.api.clients.Graphql({session:res.locals.shopify.session});
+   const data = await client.query({
+     data: `query {
+       products(first: 50, query: "title:${searchQuery}*") {
+         edges {
+           node {
+            id
+            title
+            handle
+            vendor
+            images(first: 1) {
+              edges {
+                node {
+                  originalSrc
+                }
+              }
+            }
+            variants(first: 1) {
+              nodes {
+                price
+              }
+            }
+           }
+         }
+       }
+     }`,
+   });
+   console.log(data.body.data.products)
+   res.json(data.body.data.products)
+    }
+  catch(error){
+    res.status(500).json({ error: error.message });
+  }
+
+})
+
 app.post("/api/products/meta", async (_req, res) => {
   const { items, id } = _req.body;
   let result = [];
-  console.log(res.locals.shopify.session)
+  
 
 for (let i = 0; i < items.length; i++) {
   result.push(items[i]);
@@ -127,7 +176,7 @@ for (let i = 0; i < items.length; i++) {
   await metafield.save({
     update: true,
   });
-  console.log(metafield)
+ 
   res.status(200).send(metafield)
   });
 
