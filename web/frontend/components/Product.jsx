@@ -15,7 +15,7 @@ import {
 } from "@shopify/polaris";
 import "../assets/style.css"
 
-export function MetafieldListAlt() {
+export function Product() {
   
   const [products, setProducts] = useState([]);
   const [active, setActive] = useState(false);

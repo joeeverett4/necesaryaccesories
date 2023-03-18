@@ -11,7 +11,7 @@ import {
 import { TitleBar } from "@shopify/app-bridge-react";
 
 import { trophyImage } from "../assets";
-import { IndexTableWithAllElementsExample } from "../components";
+import { Productlistmain } from "../components";
 
 export default function HomePage() {
   return (
@@ -19,7 +19,7 @@ export default function HomePage() {
       <TitleBar title="necesaryaccesories" primaryAction={null} />
       <Layout>
         <Layout.Section>
-          <IndexTableWithAllElementsExample />
+          <Productlistmain />
         </Layout.Section>
       </Layout>
     </Page>

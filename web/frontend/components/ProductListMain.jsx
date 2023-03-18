@@ -13,7 +13,7 @@ import { useNavigate } from "@shopify/app-bridge-react";
 import { useState, useEffect, useCallback } from "react";
 import { useAuthenticatedFetch } from "../hooks";
 
-export function IndexTableWithAllElementsExample() {
+export function Productlistmain() {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -209,7 +209,6 @@ export function IndexTableWithAllElementsExample() {
           <Filters
             queryValue={queryValue}
             filters={filters}
-            appliedFilters={appliedFilters}
             onQueryChange={setNewProductsFromSearch}
             onQueryClear={handleQueryValueRemove}
             onClearAll={handleClearAll}

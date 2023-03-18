@@ -1,3 +1,3 @@
-export { MetafieldListAlt } from "./MetafieldListAlt";
-export { IndexTableWithAllElementsExample } from "./IndexTabExample"
+export { Product } from "./Product";
+export { Productlistmain } from "./ProductListMain"
 export * from "./providers";

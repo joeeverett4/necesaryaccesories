@@ -10,7 +10,7 @@ import {
     Link,
     Heading,
   } from "@shopify/polaris";
-import { MetafieldListAlt } from "../../../components";
+import { Product } from "../../../components";
 
 export default function index() {
   return (
@@ -22,7 +22,7 @@ export default function index() {
     <Layout>
      
       <Layout.Section>
-       <MetafieldListAlt /> 
+       <Product /> 
       </Layout.Section>
     </Layout>
   </Page>
