@@ -1,6 +1,12 @@
 
 
 {% assign accesories =  product.metafields.my_fields.sponsor.value %}
+
+{% assign collectionname = product.collections[0].title %}
+
+{% assign collectionaccesories = collections[collectionname].metafields.my_fields.sponsor.value %}
+
+
 <h1 style = "text-align:center;">{{block.settings.heading}}</h1>
 
 <div class = "outfoss-product-grid">
@@ -22,6 +28,11 @@
           </ul>
        </div>
     </div>
+{% endfor %}
+<h1>tastychinatow</h1>
+<h1>{{collectionname}}</h1>
+{% for collproduct in collectionaccesories %}
+{{collproduct.title}}
 {% endfor %}
 </div>
 

@@ -26,7 +26,7 @@ export function Productlistmain() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("USEEFFECT");
+    console.log("USEEFFECTs");
     fetch("/api/product/count")
       .then((response) => response.text())
       .then((totalCount) => {
