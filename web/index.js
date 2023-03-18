@@ -209,6 +209,26 @@ app.get('/api/quieries/:query', async (req, res) => {
 
 })
 
+app.get("/api/collections", async (req, res) => {
+  const client = new shopify.api.clients.Graphql({session: res.locals.shopify.session});
+const data = await client.query({
+  data: `query {
+    collections(first: 100) {
+      edges {
+        node {
+          id
+          title
+          handle
+          updatedAt
+          productsCount
+          sortOrder
+        }
+      }
+    }
+  }`,
+});
+})
+
 app.post("/api/products/meta", async (_req, res) => {
   const { items, id } = _req.body;
   let result = [];
