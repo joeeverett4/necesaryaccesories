@@ -8,6 +8,9 @@ import {
   Pagination,
   Thumbnail,
   Link,
+  SkeletonBodyText,
+  SkeletonThumbnail,
+  SkeletonDisplayText
 } from "@shopify/polaris";
 import { useNavigate } from "@shopify/app-bridge-react";
 import { useState, useEffect, useCallback } from "react";
@@ -17,6 +20,7 @@ export function Productlistmain() {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading]  = useState(true);
   const [nextUrl, setNextUrl] = useState(
     ""
   );
@@ -48,6 +52,7 @@ export function Productlistmain() {
         let costa = getNodesFromConnections(products);
 
         setProducts(costa);
+        setIsLoading(false)
         console.log(products.pageInfo)
         setNextUrl(products.pageInfo.endCursor);
         
@@ -92,10 +97,13 @@ export function Productlistmain() {
       amountSpent: "$140",
     },
   ];
-  const resourceName = {
-    singular: "customer",
-    plural: "customers",
-  };
+
+
+  const loadingMarkup = isLoading ? (
+    <>
+    <SkeletonBodyText />
+    </>
+  ) : null;
 
   const { selectedResources, allResourcesSelected, handleSelectionChange } =
     useIndexResourceState(customers);
@@ -196,7 +204,7 @@ export function Productlistmain() {
     { label: "Last 7 days", value: "lastWeek" },
   ];
 
-  const rowMarkup = products.map(
+  const rowMarkup = !isLoading ? products.map(
     ({ id, title, images, vendor, variants }, index) => (
       
       <IndexTable.Row
@@ -222,8 +230,8 @@ export function Productlistmain() {
         <IndexTable.Cell>{"testthree"}</IndexTable.Cell>
       </IndexTable.Row>
       
-    )
-  );
+    ) 
+  ) : null ;
 
   return (
     <Card>
@@ -248,13 +256,10 @@ export function Productlistmain() {
         </div>
       </div>
       <IndexTable
-        resourceName={resourceName}
         itemCount={products.length}
-        selectedItemsCount={
-          allResourcesSelected ? "All" : selectedResources.length
-        }
         onSelectionChange={handleSelectionChange}
         hasMoreItems
+        emptyState = {loadingMarkup}
         bulkActions={bulkActions}
         promotedBulkActions={promotedBulkActions}
         selectable={false}
@@ -277,6 +282,7 @@ export function Productlistmain() {
         ]}
       >
         {rowMarkup}
+        {loadingMarkup}
       </IndexTable>
       <Pagination
         hasNext={true}
