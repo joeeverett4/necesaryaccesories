@@ -79,26 +79,6 @@ export function Productlistmain() {
     }
   }, [currentPage]);
 
-  const customers = [
-    {
-      id: "3417",
-      url: "#",
-      name: "Mae Jemison",
-      location: "Decatur, USA",
-      orders: 20,
-      amountSpent: "$2,400",
-    },
-    {
-      id: "2567",
-      url: "#",
-      name: "Ellen Ochoa",
-      location: "Los Angeles, USA",
-      orders: 30,
-      amountSpent: "$140",
-    },
-  ];
-
-
   const loadingMarkup = isLoading ? (
     <>
     <SkeletonBodyText />
@@ -106,26 +86,14 @@ export function Productlistmain() {
   ) : null;
 
   const { selectedResources, allResourcesSelected, handleSelectionChange } =
-    useIndexResourceState(customers);
-  const [taggedWith, setTaggedWith] = useState("VIP");
+    useIndexResourceState();
   const [queryValue, setQueryValue] = useState(null);
-  const [sortValue, setSortValue] = useState("today");
+  
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
-
-  const handleTaggedWithChange = useCallback(
-    (value) => setTaggedWith(value),
-    []
-  );
-  const handleTaggedWithRemove = useCallback(() => setTaggedWith(null), []);
-  const handleQueryValueRemove = useCallback(() => setQueryValue(null), []);
-  const handleClearAll = useCallback(() => {
-    handleTaggedWithRemove();
-    handleQueryValueRemove();
-  }, [handleQueryValueRemove, handleTaggedWithRemove]);
-  const handleSortChange = useCallback((value) => setSortValue(value), []);
+ 
 
   const setNewProductsFromSearch = (value) => {
     console.log("setNewProducts");
@@ -150,59 +118,13 @@ export function Productlistmain() {
     }
   };
 
-  const promotedBulkActions = [
-    {
-      content: "Edit customers",
-      onAction: () => console.log("Todo: implement bulk edit"),
-    },
-  ];
-  const bulkActions = [
-    {
-      content: "Add tags",
-      onAction: () => console.log("Todo: implement bulk add tags"),
-    },
-    {
-      content: "Remove tags",
-      onAction: () => console.log("Todo: implement bulk remove tags"),
-    },
-    {
-      content: "Delete customers",
-      onAction: () => console.log("Todo: implement bulk delete"),
-    },
-  ];
 
   const filters = [
-    {
-      key: "taggedWith",
-      label: "Tagged with",
-      filter: (
-        <TextField
-          label="Tagged with"
-          value={taggedWith}
-          onChange={handleTaggedWithChange}
-          autoComplete="off"
-          labelHidden
-        />
-      ),
-      shortcut: true,
-    },
+   
   ];
 
-  const appliedFilters = !isEmpty(taggedWith)
-    ? [
-        {
-          key: "taggedWith",
-          label: disambiguateLabel("taggedWith", taggedWith),
-          onRemove: handleTaggedWithRemove,
-        },
-      ]
-    : [];
+  
 
-  const sortOptions = [
-    { label: "Today", value: "today" },
-    { label: "Yesterday", value: "yesterday" },
-    { label: "Last 7 days", value: "lastWeek" },
-  ];
 
   const rowMarkup = !isLoading ? products.map(
     ({ id, title, images, vendor, variants }, index) => (
@@ -241,27 +163,15 @@ export function Productlistmain() {
             queryValue={queryValue}
             filters={filters}
             onQueryChange={setNewProductsFromSearch}
-            onQueryClear={handleQueryValueRemove}
-            onClearAll={handleClearAll}
           />
         </div>
-        <div style={{ paddingLeft: "0.25rem" }}>
-          <Select
-            labelInline
-            label="Sort by"
-            options={sortOptions}
-            value={sortValue}
-            onChange={handleSortChange}
-          />
-        </div>
+        
       </div>
       <IndexTable
         itemCount={products.length}
         onSelectionChange={handleSelectionChange}
         hasMoreItems
         emptyState = {loadingMarkup}
-        bulkActions={bulkActions}
-        promotedBulkActions={promotedBulkActions}
         selectable={false}
         lastColumnSticky
         headings={[
@@ -293,20 +203,4 @@ export function Productlistmain() {
     </Card>
   );
 
-  function disambiguateLabel(key, value) {
-    switch (key) {
-      case "taggedWith":
-        return `Tagged with ${value}`;
-      default:
-        return value;
-    }
-  }
-
-  function isEmpty(value) {
-    if (Array.isArray(value)) {
-      return value.length === 0;
-    } else {
-      return value === "" || value == null;
-    }
-  }
 }
