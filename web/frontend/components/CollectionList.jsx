@@ -65,20 +65,17 @@ import {
           key={id}
           position={index}
         >
-          <IndexTable.Cell>
-            <Thumbnail source={images?.edges[0]?.node?.originalSrc} />
-          </IndexTable.Cell>
+       
           <IndexTable.Cell>
             <Link
-              dataPrimaryLink
+              monochrome
               url={`/collection/${id}`}
               onClick={() => navigate(`/collection/${id.split("/").pop()}`)}
             >
               {title}
             </Link>
           </IndexTable.Cell>
-          <IndexTable.Cell>{vendor}</IndexTable.Cell>
-          <IndexTable.Cell>{"testthree"}</IndexTable.Cell>
+        
         </IndexTable.Row>
         
       )
@@ -93,20 +90,9 @@ import {
           selectable={false}
           lastColumnSticky
           headings={[
-            { title: "" },
-            { title: "Products" },
-            {
-              id: "vendor",
-              title: "Vendor",
-            },
-            {
-              id: "type",
-              title: "Type",
-            },
-            {
-              id: "test",
-              title: "Test",
-            },
+            { title: "Collection name" },
+            
+         
           ]}
         >
           {rowMarkup}
