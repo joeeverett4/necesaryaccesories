@@ -1,16 +1,13 @@
 import {
-  TextField,
   IndexTable,
   Card,
   Filters,
-  Select,
   useIndexResourceState,
   Pagination,
   Thumbnail,
   Link,
   SkeletonBodyText,
-  SkeletonThumbnail,
-  SkeletonDisplayText
+  Stack,
 } from "@shopify/polaris";
 import { useNavigate } from "@shopify/app-bridge-react";
 import { useState, useEffect, useCallback } from "react";
@@ -140,7 +137,8 @@ export function Productlistmain() {
         </IndexTable.Cell>
         <IndexTable.Cell>
           <Link
-            dataPrimaryLink
+            monochrome
+            removeUnderline = {true}
             url={`/products/${id}`}
             onClick={() => navigate(`/products/${id.split("/").pop()}`)}
           >
@@ -156,6 +154,7 @@ export function Productlistmain() {
   ) : null ;
 
   return (
+    
     <Card>
       <div style={{ padding: "16px", display: "flex" }}>
         <div style={{ flex: 1 }}>
@@ -194,13 +193,20 @@ export function Productlistmain() {
         {rowMarkup}
         {loadingMarkup}
       </IndexTable>
+      <div style={{ paddingBottom: "20px" }}>
+      <Stack alignment="center" distribution = "center">
       <Pagination
         hasNext={true}
         hasPrevious={true}
         onNext={() => handlePageChange(currentPage + 1)}
         onPrevious={() => handlePageChange(currentPage - 1)}
       />
+   </Stack >
+   </div>
     </Card>
+      
+     
+    
   );
 
 }
