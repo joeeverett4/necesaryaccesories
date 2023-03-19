@@ -16,7 +16,7 @@ const STATIC_PATH =
     : `${process.cwd()}/frontend/`;
 
 const app = express();
-const db = new sqlite3.Database('database.sqlite');
+const db = new sqlite3.Database("database.sqlite");
 
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
@@ -35,41 +35,57 @@ app.use("/api/*", shopify.validateAuthenticatedSession());
 
 app.use(express.json());
 
-app.get('/api/product/count', async (req, res) => {
- const countproducts =  await shopify.api.rest.Product.count({
+app.get("/api/product/count", async (req, res) => {
+  const countproducts = await shopify.api.rest.Product.count({
     session: res.locals.shopify.session,
   });
 
-  res.send(countproducts)
+  res.send(countproducts);
+});
 
-})
-
-// Endpoint to get a page of products
-app.get('/api/product/:productId', async (req, res) => {
+// Parent product
+app.get("/api/product/:productId", async (req, res) => {
   try {
-    console.log(req.params.productId)
+    console.log(req.params.productId);
     const productreturn = await shopify.api.rest.Product.find({
       session: res.locals.shopify.session,
       id: req.params.productId,
     });
-  
-    res.json(productreturn)
+
+    res.json(productreturn);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+//parent collection
+
+app.get("/api/collection/:collectionId", async (req, res) => {
+  try {
+    console.log(req.params.collectionId);
+    const collectionreturn = await shopify.api.rest.Collection.find({
+      session: res.locals.shopify.session,
+      id: req.params.collectionId,
+    });
+
+    res.json(collectionreturn);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
 
+
 // get first products
 
-app.get('/api/firstproducts', async (req, res) => {
+app.get("/api/firstproducts", async (req, res) => {
   try {
-   
- 
-     const client = new shopify.api.clients.Graphql({session: res.locals.shopify.session});
-     
-     const data = await client.query({
-   data: `query {
+    const client = new shopify.api.clients.Graphql({
+      session: res.locals.shopify.session,
+    });
+
+    const data = await client.query({
+      data: `query {
      products(first: 50, sortKey:TITLE) {
        edges {
          node {
@@ -101,29 +117,25 @@ app.get('/api/firstproducts', async (req, res) => {
        }
      }
    }`,
- });
- 
- 
- 
-    res.json(data.body.data.products)
-    
-   } catch (error) {
-     res.status(500).json({ error: error.message });
-   }
-})
+    });
 
-
-
+    res.json(data.body.data.products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Endpoint to get a page of products
-app.get('/api/products/:cursor', async (req, res) => {
+app.get("/api/products/:cursor", async (req, res) => {
   try {
-   const cursor = req.params.cursor
+    const cursor = req.params.cursor;
 
-    const client = new shopify.api.clients.Graphql({session: res.locals.shopify.session});
-    console.log(cursor)
+    const client = new shopify.api.clients.Graphql({
+      session: res.locals.shopify.session,
+    });
+    console.log(cursor);
     const data = await client.query({
-  data: `query {
+      data: `query {
     products(first: 50, after: "${cursor}", sortKey: TITLE) {
       edges {
         node {
@@ -155,27 +167,26 @@ app.get('/api/products/:cursor', async (req, res) => {
       }
     }
   }`,
-});
+    });
 
-console.log(data.body.data.products.edges[0].node)
+    console.log(data.body.data.products.edges[0].node);
 
- res.json(data.body.data.products)
-   
+    res.json(data.body.data.products);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-app.get('/api/quieries/:query', async (req, res) => {
-
-  try{
-
+app.get("/api/quieries/:query", async (req, res) => {
+  try {
     const searchQuery = req.params.query;
-    console.log(searchQuery)
-  
-   const client = new shopify.api.clients.Graphql({session:res.locals.shopify.session});
-   const data = await client.query({
-     data: `query {
+    console.log(searchQuery);
+
+    const client = new shopify.api.clients.Graphql({
+      session: res.locals.shopify.session,
+    });
+    const data = await client.query({
+      data: `query {
        products(first: 50, query: "title:${searchQuery}*") {
          edges {
            node {
@@ -199,46 +210,47 @@ app.get('/api/quieries/:query', async (req, res) => {
          }
        }
      }`,
-   });
-   console.log(data.body.data.products)
-   res.json(data.body.data.products)
-    }
-  catch(error){
+    });
+    console.log(data.body.data.products);
+    res.json(data.body.data.products);
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
-
-})
+});
 
 app.get("/api/collections", async (req, res) => {
-  const client = new shopify.api.clients.Graphql({session: res.locals.shopify.session});
-const data = await client.query({
-  data: `query {
-    collections(first: 100) {
+  const client = new shopify.api.clients.Graphql({
+    session: res.locals.shopify.session,
+  });
+  const data = await client.query({
+    data: `query {
+    collections(first: 5) {
       edges {
         node {
           id
           title
           handle
           updatedAt
-          productsCount
-          sortOrder
         }
       }
     }
   }`,
+  });
+  console.log(data.body.data.collections);
+  res.json(data.body.data.collections);
 });
-})
 
 app.post("/api/products/meta", async (_req, res) => {
   const { items, id } = _req.body;
   let result = [];
-  
 
-for (let i = 0; i < items.length; i++) {
-  result.push(items[i]);
-}
-  console.log(result)
-  const metafield = new shopify.api.rest.Metafield({session: res.locals.shopify.session});
+  for (let i = 0; i < items.length; i++) {
+    result.push(items[i]);
+  }
+  console.log(result);
+  const metafield = new shopify.api.rest.Metafield({
+    session: res.locals.shopify.session,
+  });
   metafield.product_id = id;
   metafield.namespace = "my_fields";
   metafield.key = "sponsor";
@@ -247,64 +259,62 @@ for (let i = 0; i < items.length; i++) {
   await metafield.save({
     update: true,
   });
- 
-  res.status(200).send(metafield)
-  });
 
-  app.get('/api/products/db/:id', (req, res) => {
-    
-    const product = req.params.id;
-    
-     // run the SELECT statement with the specified city value
-    db.all('SELECT * FROM productmain WHERE product_id = ?', [product], (err, rows) => {
+  res.status(200).send(metafield);
+});
+
+app.get("/api/products/db/:id", (req, res) => {
+  const product = req.params.id;
+
+  // run the SELECT statement with the specified city value
+  db.all(
+    "SELECT * FROM productmain WHERE product_id = ?",
+    [product],
+    (err, rows) => {
       if (err) {
         // handle error
         console.error(err.message);
-        res.status(500).send('Internal server error');
+        res.status(500).send("Internal server error");
       } else {
         // send the rows back as the response
         res.json(rows);
       }
-    });
-  
-  });
+    }
+  );
+});
 
-  app.post("/api/products/db", async (_req, res) => {
-   const shop = res.locals.shopify.session.shop
-   const { title, product_id, image, description, sequence } = _req.body; // extract values from request body
-   
-  
-   
-   
- db.run('INSERT INTO productmain (title, product_id, image, description, sequence, shop) VALUES (?, ?, ?, ?, ?, ?)', [title, product_id, image, description, sequence, shop], (err) => {
-         if (err) {
-           console.error(err);
-           res.status(500).send('Internal Server Error');
-           return;
-         }
-       
-         res.status(200).send('OK');
-       });
-    
-  
-  }) 
+app.post("/api/products/db", async (_req, res) => {
+  const shop = res.locals.shopify.session.shop;
+  const { title, product_id, image, description, sequence } = _req.body; // extract values from request body
 
-  app.delete('/api/products/db/:id', (req, res) => {
-    const { id } = req.params;
-  
-    const sql = `DELETE FROM productmain WHERE product_id = ?`;
-    db.run(sql, [id], (err) => {
+  db.run(
+    "INSERT INTO productmain (title, product_id, image, description, sequence, shop) VALUES (?, ?, ?, ?, ?, ?)",
+    [title, product_id, image, description, sequence, shop],
+    (err) => {
       if (err) {
-        console.error(err.message);
-        res.status(500).json({ error: 'Error deleting data' });
-      } else {
-        res.json({ message: `Rows with ID '${id}' deleted successfully` });
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+        return;
       }
-    });
+
+      res.status(200).send("OK");
+    }
+  );
+});
+
+app.delete("/api/products/db/:id", (req, res) => {
+  const { id } = req.params;
+
+  const sql = `DELETE FROM productmain WHERE product_id = ?`;
+  db.run(sql, [id], (err) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).json({ error: "Error deleting data" });
+    } else {
+      res.json({ message: `Rows with ID '${id}' deleted successfully` });
+    }
   });
-
-
-
+});
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
 
