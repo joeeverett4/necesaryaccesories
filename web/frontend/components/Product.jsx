@@ -10,7 +10,10 @@ import {
   Button,
   TextStyle,
   Layout,
-  Thumbnail
+  Thumbnail,
+  SkeletonThumbnail,
+  SkeletonDisplayText,
+  SkeletonBodyText
   
 } from "@shopify/polaris";
 import "../assets/style.css"
@@ -173,7 +176,20 @@ export function Product() {
       {toastMarkup}
       </>
     ) : (
-      <p>Loading</p>
+      <Layout>
+      <Layout.Section oneHalf>
+    <Card
+        title= {<SkeletonDisplayText />}
+        sectioned
+      >
+        <TextContainer spacing="loose">
+        <SkeletonBodyText />
+        </TextContainer>
+      </Card>
+      </Layout.Section>
+      <Layout.Section oneHalf>
+      </Layout.Section>
+      </Layout>
     )
 }
     </>

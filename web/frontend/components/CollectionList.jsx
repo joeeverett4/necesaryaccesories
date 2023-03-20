@@ -1,27 +1,20 @@
 import {
-    TextField,
     IndexTable,
     Card,
-    Filters,
-    Select,
-    useIndexResourceState,
-    Pagination,
-    Thumbnail,
     Link,
+    SkeletonBodyText
   } from "@shopify/polaris";
   import { useNavigate } from "@shopify/app-bridge-react";
-  import { useState, useEffect, useCallback } from "react";
+  import { useState, useEffect } from "react";
   import { useAuthenticatedFetch } from "../hooks";
   
   export function Collectionlistmain() {
+
     const [collections, setCollections] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const [nextUrl, setNextUrl] = useState(
-      ""
-    );
+    
+    const [isLoading, setIsLoading]  = useState(true);
     const fetch = useAuthenticatedFetch();
-    const productsPerPage = 10;
+   
   
     const navigate = useNavigate();
   
@@ -39,25 +32,22 @@ import {
         };
        let costa = getNodesFromConnections(collections);
        setCollections(costa)
+       setIsLoading(false)
     })
-
-      fetch("/api/product/count")
-        .then((response) => response.text())
-        .then((totalCount) => {
-          // Calculate the total number of pages
-          const Pages = Math.ceil(totalCount / productsPerPage);
-          setTotalPages(Pages);
-        });
        
-    }, [currentPage]);
+    }, []);
   
  
-
+    const loadingMarkup = isLoading ? (
+      <>
+      <SkeletonBodyText />
+      </>
+    ) : null;
       
    
   
 
-    const rowMarkup = collections.map(
+    const rowMarkup =  !isLoading ? collections.map(
       ({ id, title, images, vendor }, index) => (
         
         <IndexTable.Row
@@ -79,7 +69,7 @@ import {
         </IndexTable.Row>
         
       )
-    );
+    ) : null ;
   
     return (
       <Card>
@@ -89,12 +79,14 @@ import {
           itemCount={collections.length}
           selectable={false}
           lastColumnSticky
+          emptyState = {loadingMarkup}
           headings={[
             { title: "Collection name" },
             
          
           ]}
         >
+          {loadingMarkup}
           {rowMarkup}
         </IndexTable>
        
