@@ -224,13 +224,21 @@ app.get("/api/collections", async (req, res) => {
   });
   const data = await client.query({
     data: `query {
-    collections(first: 5) {
+    collections(first: 100) {
       edges {
         node {
           id
           title
           handle
-          updatedAt
+          image{url}
+          productsCount
+          ruleSet{
+            rules{
+                column
+                relation
+                condition
+            }
+          }
         }
       }
     }

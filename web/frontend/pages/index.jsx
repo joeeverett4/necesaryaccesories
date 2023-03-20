@@ -15,7 +15,10 @@ import { Productlistmain } from "../components";
 
 export default function HomePage() {
   return (
-    <Page fullWidth>
+    <Page 
+    fullWidth
+    divider = {false}
+    >
       <TitleBar title="necesaryaccesories" primaryAction={null} />
       <Layout>
         <Layout.Section>
