@@ -12,8 +12,9 @@
    {% assign accesories = productaccesories %}
  {% endif %}  
 
-
-<h1 style = "text-align:center;">{{block.settings.heading}}</h1>
+{% if accesories != blank %}
+<h2 style = "text-align:center;">{{block.settings.heading}}</h2>
+{% endif %}
 
 <div class = "outfoss-product-grid">
 
@@ -25,7 +26,7 @@
         <h3>{{product.title}}</h3>
         <p>{{product.price | money}}</p>
       </a>
-      <button class="outfoss-add-to-cart" style = "background-color:{{block.settings.cartbackgroundcolor}}" {% if product.has_only_default_variant == false %} data-show = "true" {% endif %}  data-product-id="{{product.variants[0].id}}"><span style = "color:{{block.settings.carttextcolor}}">Add to Cart</span></button>
+      <button class="outfoss-add-to-cart" style = "background-color:{{block.settings.cartbackgroundcolor}}; color: {{block.settings.carttextcolor}}" {% if product.has_only_default_variant == false %} data-show = "true" {% endif %}  data-product-id="{{product.variants[0].id}}"><span style = "color:{{block.settings.carttextcolor}}">Add to Cart</span></button>
        <div class = "toast" style = "display:none;">
           <ul class = "toast-list">
           {% for variant in product.variants %}
@@ -36,6 +37,15 @@
     </div>
 {% endfor %}
 </div>
+
+<style>
+
+.outfoss-add-to-cart span{
+color:{{block.settings.carttextcolor}}
+}
+
+
+</style>
 
 
 {% schema %}

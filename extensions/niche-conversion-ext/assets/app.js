@@ -1,13 +1,14 @@
 window.onload = async function () {
 
-   
-
   
    function sleep(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
     // adding onclick event to add product to cart
   const buttons = document.querySelectorAll(".outfoss-add-to-cart")
+
+  const buttonColor = document.querySelector(".outfoss-add-to-cart").style.color;
+
    
   buttons.forEach(function (button, index) {
   
@@ -31,8 +32,8 @@ window.onload = async function () {
             toast.style.display = "block";
             // button.click();
             button.innerHTML = `<svg  aria-hidden="true" focusable="false" role="presentation" width="12" height="13" class="icon icon-close-small" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8.48627 9.32917L2.82849 3.67098" stroke="#333030" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M2.88539 9.38504L8.42932 3.61524" stroke="#333030" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8.48627 9.32917L2.82849 3.67098" stroke="${buttonColor}" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2.88539 9.38504L8.42932 3.61524" stroke="${buttonColor}" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
     
          `;
@@ -52,7 +53,7 @@ window.onload = async function () {
         
         console.log("this is productid " + productid)
         button.innerHTML = `
-        <svg aria-hidden="true" focusable="false" role="presentation" class="zyzicon zyzicon-spinner" viewBox="0 0 20 20"><path d="M7.229 1.173a9.25 9.25 0 1 0 11.655 11.412 1.25 1.25 0 1 0-2.4-.698 6.75 6.75 0 1 1-8.506-8.329 1.25 1.25 0 1 0-.75-2.385z" fill="#919EAB"/></svg>
+        <svg aria-hidden="true" focusable="false" role="presentation" class="zyzicon zyzicon-spinner" viewBox="0 0 20 20"><path d="M7.229 1.173a9.25 9.25 0 1 0 11.655 11.412 1.25 1.25 0 1 0-2.4-.698 6.75 6.75 0 1 1-8.506-8.329 1.25 1.25 0 1 0-.75-2.385z" fill="${buttonColor}"/></svg>
         `;
   
         let formData = {
@@ -77,7 +78,7 @@ window.onload = async function () {
           .then((res) => {
             button.innerHTML = `
             <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18 7L9.42857 17L6 13" stroke="#363853" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18 7L9.42857 17L6 13" stroke="${buttonColor}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             `;
             console.log("tick");
@@ -86,7 +87,7 @@ window.onload = async function () {
           .then(function () {
             button.innerHTML = "Add to Cart";
             console.log("add to cart");
-            alert("added succsesfulyys");
+           
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -110,7 +111,7 @@ window.onload = async function () {
         const siblingBtn = parentBtn.previousElementSibling;
   
         siblingBtn.innerHTML = `
-        <svg aria-hidden="true" focusable="false" role="presentation" class="zyzicon zyzicon-spinner" viewBox="0 0 20 20"><path d="M7.229 1.173a9.25 9.25 0 1 0 11.655 11.412 1.25 1.25 0 1 0-2.4-.698 6.75 6.75 0 1 1-8.506-8.329 1.25 1.25 0 1 0-.75-2.385z" fill="#919EAB"/></svg>
+        <svg aria-hidden="true" focusable="false" role="presentation" class="zyzicon zyzicon-spinner" viewBox="0 0 20 20"><path d="M7.229 1.173a9.25 9.25 0 1 0 11.655 11.412 1.25 1.25 0 1 0-2.4-.698 6.75 6.75 0 1 1-8.506-8.329 1.25 1.25 0 1 0-.75-2.385z" fill="${buttonColor}"/></svg>
         `;
         parentBtn.style.display = "none";
   
@@ -135,7 +136,7 @@ window.onload = async function () {
           .then((res) => {
             siblingBtn.innerHTML = `
             <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18 7L9.42857 17L6 13" stroke="#363853" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18 7L9.42857 17L6 13" stroke="${buttonColor}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             `;
             console.log("tick");
@@ -144,7 +145,7 @@ window.onload = async function () {
           .then(function () {
             siblingBtn.innerHTML = "Add to Cart";
             console.log("add to cartvariant");
-            alert("added succsesfulyys");
+          
           })
           .catch((error) => {
             console.error("Error:", error);

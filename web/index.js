@@ -299,7 +299,7 @@ app.get("/api/products/db/:id", (req, res) => {
 
   // run the SELECT statement with the specified city value
   db.all(
-    "SELECT * FROM productmain WHERE product_id = ?",
+    "SELECT * FROM productmain WHERE product_id = ? ORDER BY sequence ASC",
     [product],
     (err, rows) => {
       if (err) {
