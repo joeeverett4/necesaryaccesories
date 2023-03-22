@@ -17,6 +17,7 @@ export default function index() {
     <Page 
     fullWidth
     breadcrumbs={[{content: 'Products', url: '/'}]}
+
     >
     
     <Layout>

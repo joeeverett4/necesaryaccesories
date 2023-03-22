@@ -147,11 +147,6 @@ export function Productlistmain() {
 
   return (
     <>
-     <Card
-     title = "Welcome to AppMagic : Accessories"
-     >
-       
-     </Card>
     <Card
     title = "Choose product to add accesories to"
     >

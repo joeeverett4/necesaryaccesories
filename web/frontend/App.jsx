@@ -21,8 +21,12 @@ export default function App() {
             <NavigationMenu
               navigationLinks={[
                 {
-                  label: "Accesory by collection",
-                  destination: "/Collection",
+                  label: "Product Accesories",
+                  destination: "/products",
+                },
+                {
+                  label: "Collection Accesories",
+                  destination: "/collections",
                 },
               ]}
             />

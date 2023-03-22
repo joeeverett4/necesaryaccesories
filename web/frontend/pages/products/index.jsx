@@ -9,17 +9,18 @@ import {
     Heading,
   } from "@shopify/polaris";
   import { TitleBar } from "@shopify/app-bridge-react";
+  import { Productlistmain } from "../../components";
   
-  import { trophyImage } from "../assets";
-  import { Collectionlistmain } from "../components";
-  
-  export default function Collection() {
+  export default function index() {
     return (
-      <Page fullWidth>
-        <TitleBar title="necesaryaccesories" primaryAction={null} />
+      <Page 
+      narrowWidth
+      divider = {false}
+      >
+        <TitleBar title="Product Accesories" primaryAction={null} />
         <Layout>
           <Layout.Section>
-            <Collectionlistmain />
+            <Productlistmain />
           </Layout.Section>
         </Layout>
       </Page>

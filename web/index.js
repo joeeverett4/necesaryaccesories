@@ -86,7 +86,7 @@ app.get("/api/firstproducts", async (req, res) => {
 
     const data = await client.query({
       data: `query {
-     products(first: 50, sortKey:TITLE) {
+     products(first: 25, sortKey:TITLE) {
        edges {
          node {
            id
@@ -187,7 +187,7 @@ app.get("/api/quieries/:query", async (req, res) => {
     });
     const data = await client.query({
       data: `query {
-       products(first: 50, query: "title:${searchQuery}*") {
+       products(first: 25, query: "title:${searchQuery}*") {
          edges {
            node {
             id
