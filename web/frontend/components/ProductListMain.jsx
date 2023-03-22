@@ -8,6 +8,7 @@ import {
   Link,
   SkeletonBodyText,
   Stack,
+  Heading,
   Icon
 } from "@shopify/polaris";
 import { ImageMajor } from "@shopify/polaris-icons";
@@ -139,15 +140,20 @@ export function Productlistmain() {
               {title}
             </Link>
           </IndexTable.Cell>
-          <IndexTable.Cell>{vendor}</IndexTable.Cell>
-          <IndexTable.Cell>{variants?.nodes[0]?.price}</IndexTable.Cell>
-          <IndexTable.Cell>{"testthree"}</IndexTable.Cell>
+         
         </IndexTable.Row>
       ))
     : null;
 
   return (
+    <>
+     <Card
+     title = "Welcome to AppMagic : Accessories"
+     >
+       
+     </Card>
     <Card
+    title = "Choose product to add accesories to"
     >
       <div style={{ padding: "16px", display: "flex" }}>
         <div style={{ flex: 1 }}>
@@ -155,6 +161,7 @@ export function Productlistmain() {
             queryValue={queryValue}
             filters={filters}
             onQueryChange={setNewProductsFromSearch}
+            queryPlaceholder = "Search products"
           />
         </div>
       </div>
@@ -164,22 +171,10 @@ export function Productlistmain() {
         hasMoreItems
         emptyState={loadingMarkup}
         selectable={false}
-        lastColumnSticky
         headings={[
           { title: "" },
           { title: "Products" },
-          {
-            id: "vendor",
-            title: "Vendor",
-          },
-          {
-            id: "type",
-            title: "Type",
-          },
-          {
-            id: "test",
-            title: "Test",
-          },
+         
         ]}
       >
         {rowMarkup}
@@ -196,5 +191,6 @@ export function Productlistmain() {
         </Stack>
       </div>
     </Card>
+    </>
   );
 }

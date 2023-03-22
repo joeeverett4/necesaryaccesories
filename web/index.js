@@ -136,7 +136,7 @@ app.get("/api/products/:cursor", async (req, res) => {
     console.log(cursor);
     const data = await client.query({
       data: `query {
-    products(first: 50, after: "${cursor}", sortKey: TITLE) {
+    products(first: 25, after: "${cursor}", sortKey: TITLE) {
       edges {
         node {
           id
@@ -271,6 +271,27 @@ app.post("/api/products/meta", async (_req, res) => {
   res.status(200).send(metafield);
 });
 
+app.post("/api/products/remove", async (_req, res) => {
+  const { id } = _req.body;
+  let result = [];
+
+  
+  console.log(result);
+  const metafield = new shopify.api.rest.Metafield({
+    session: res.locals.shopify.session,
+  });
+  metafield.product_id = id;
+  metafield.namespace = "my_fields";
+  metafield.key = "sponsor";
+  metafield.type = "list.product_reference";
+  metafield.value = JSON.stringify(result);
+  await metafield.save({
+    update: true,
+  });
+
+  res.status(200).send(metafield);
+});
+
 app.post("/api/collection/meta", async (_req, res) => {
   const { items, id } = _req.body;
   let result = [];
@@ -293,6 +314,18 @@ app.post("/api/collection/meta", async (_req, res) => {
 
   res.status(200).send(metafield);
 });
+
+/*
+app.delete("/api/products/meta/:id", async (req, res) => {
+  const { id } = req.params;
+  await shopify.api.rest.Metafield.delete({
+    session: res.locals.shopify.session,
+    blog_id: 382285388,
+    id: 534526895,
+  });
+})
+
+*/
 
 app.get("/api/products/db/:id", (req, res) => {
   const product = req.params.id;

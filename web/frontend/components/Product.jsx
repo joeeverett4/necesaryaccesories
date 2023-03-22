@@ -108,6 +108,35 @@ export function Product() {
       setResourcePickerOpen(false);
     };
 
+    const handleDeleteProducts = () => {
+     console.log("handleDeletedProducts")
+
+     fetch(`/api/products/remove`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: lastPart,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        fetch(`/api/products/db/${lastPart}`, { method: 'DELETE' })
+          .then((response) => {
+            setProducts([]);
+           })
+          .catch((error) => {
+            console.error(error);
+          });
+      
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    
+    
+    }
 
 
   
@@ -121,6 +150,7 @@ export function Product() {
     <Card
         title= {parentProduct.title}
         sectioned
+        secondaryFooterActions={[{content: 'Delete Accessories', destructive : true, onAction: () => handleDeleteProducts(),}]}
         primaryFooterAction={{
           content: "Select Accessories",
           onAction: () => setResourcePickerOpen(true),

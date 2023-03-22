@@ -16,7 +16,7 @@ import { Productlistmain } from "../components";
 export default function HomePage() {
   return (
     <Page 
-    fullWidth
+    narrowWidth
     divider = {false}
     >
       <TitleBar title="necesaryaccesories" primaryAction={null} />
