@@ -58,8 +58,8 @@ export function Collectionlistmain() {
             <Link
               monochrome
               removeUnderline={true}
-              url={`/collection/${id}`}
-              onClick={() => navigate(`/collection/${id.split("/").pop()}`)}
+              url={`/collections/${id}`}
+              onClick={() => navigate(`/collections/${id.split("/").pop()}`)}
             >
               {title}
             </Link>

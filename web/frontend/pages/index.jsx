@@ -9,20 +9,18 @@ import {
   Heading,
 } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
-
-import { trophyImage } from "../assets";
-import { Productlistmain } from "../components";
+import { Home } from "../components";
 
 export default function HomePage() {
   return (
     <Page 
-    narrowWidth
+    fullWidth
     divider = {false}
     >
-      <TitleBar title="necesaryaccesories" primaryAction={null} />
+      <TitleBar title="App Magic : Accessories" primaryAction={null} />
       <Layout>
         <Layout.Section>
-          <Productlistmain />
+         <Home />
         </Layout.Section>
       </Layout>
     </Page>
