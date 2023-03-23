@@ -169,13 +169,35 @@ app.get("/api/products/:cursor", async (req, res) => {
   }`,
     });
 
-    console.log(data.body.data.products.edges[0].node);
+    
 
     res.json(data.body.data.products);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
+
+app.get("/api/accessories/:id", async (req, res) => {
+  const product = req.params.id;
+  console.log("this is id" + product)
+  // run the SELECT statement with the specified city value
+  db.all(
+    "SELECT image FROM productmain WHERE product_id = ? ORDER BY sequence ASC",
+    [product],
+    (err, rows) => {
+      if (err) {
+        // handle error
+        console.error(err.message);
+        res.status(500).send("Internal server error");
+      } else {
+        // send the rows back as the response
+        res.json(rows);
+      }
+    }
+  );
+})
+
 
 app.get("/api/quieries/:query", async (req, res) => {
   try {
@@ -211,7 +233,7 @@ app.get("/api/quieries/:query", async (req, res) => {
        }
      }`,
     });
-    console.log(data.body.data.products);
+    
     res.json(data.body.data.products);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -244,7 +266,7 @@ app.get("/api/collections", async (req, res) => {
     }
   }`,
   });
-  console.log(data.body.data.collections);
+  
   res.json(data.body.data.collections);
 });
 
@@ -329,7 +351,7 @@ app.delete("/api/products/meta/:id", async (req, res) => {
 
 app.get("/api/products/db/:id", (req, res) => {
   const product = req.params.id;
-
+  console.log("this is id" + product)
   // run the SELECT statement with the specified city value
   db.all(
     "SELECT * FROM productmain WHERE product_id = ? ORDER BY sequence ASC",
@@ -368,7 +390,7 @@ app.post("/api/products/db", async (_req, res) => {
 
 app.delete("/api/products/db/:id", (req, res) => {
   const { id } = req.params;
-
+ 
   const sql = `DELETE FROM productmain WHERE product_id = ?`;
   db.run(sql, [id], (err) => {
     if (err) {

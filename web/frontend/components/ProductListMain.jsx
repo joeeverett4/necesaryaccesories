@@ -9,7 +9,7 @@ import {
   SkeletonBodyText,
   Stack,
   Heading,
-  Icon
+  Icon,
 } from "@shopify/polaris";
 import { ImageMajor } from "@shopify/polaris-icons";
 import { useNavigate } from "@shopify/app-bridge-react";
@@ -38,7 +38,7 @@ export function Productlistmain() {
       });
     if (nextUrl == "") {
       console.log("FIRSTPRODUCTS");
-      fetch(`/api/firstproducts`)
+      fetch("/api/firstproducts")
         .then((response) => {
           return response.json();
         })
@@ -49,10 +49,25 @@ export function Productlistmain() {
           };
           let costa = getNodesFromConnections(products);
 
-          setProducts(costa);
-          setIsLoading(false);
-          console.log(products.pageInfo);
-          setNextUrl(products.pageInfo.endCursor);
+          // Wait for all API calls to resolve
+          Promise.all(
+            costa.map((c) =>
+              fetch(`/api/accessories/${c.id.split("/").pop()}`)
+                .then((response) => response.json())
+                .then((imgs) => {
+                  const destructuredimgs = imgs.map(
+                    (obj) => obj[Object.keys(obj)[0]]
+                  );
+                  return { ...c, imgs: destructuredimgs };
+                })
+            )
+          ).then((updatedCosta) => {
+            console.log(updatedCosta);
+            setProducts(updatedCosta);
+            setIsLoading(false);
+            console.log(products.pageInfo);
+            setNextUrl(products.pageInfo.endCursor);
+          });
         });
     } else {
       // Fetch the products for the current page
@@ -114,7 +129,7 @@ export function Productlistmain() {
   const filters = [];
 
   const rowMarkup = !isLoading
-    ? products.map(({ id, title, images, vendor, variants }, index) => (
+    ? products.map(({ id, title, images, vendor, variants, imgs }, index) => (
         <IndexTable.Row
           id={id}
           key={id}
@@ -125,12 +140,11 @@ export function Productlistmain() {
             {images?.edges[0]?.node?.originalSrc ? (
               <Thumbnail source={images?.edges[0]?.node?.originalSrc} />
             ) : (
-              
               <Thumbnail source={ImageMajor} color="base" />
-              
             )}
           </IndexTable.Cell>
           <IndexTable.Cell>
+            
             <Link
               monochrome
               removeUnderline={true}
@@ -139,53 +153,59 @@ export function Productlistmain() {
             >
               {title}
             </Link>
+          
           </IndexTable.Cell>
-         
+          <IndexTable.Cell>
+            <div style = {{display:"flex"}}>
+            {imgs.map((imgSrc, index) => (
+              <Thumbnail key={index} source={imgSrc} />
+            ))}
+            </div>
+          </IndexTable.Cell>
         </IndexTable.Row>
       ))
     : null;
 
   return (
     <>
-    <Card
-    title = "Choose product to add accesories to"
-    >
-      <div style={{ padding: "16px", display: "flex" }}>
-        <div style={{ flex: 1 }}>
-          <Filters
-            queryValue={queryValue}
-            filters={filters}
-            onQueryChange={setNewProductsFromSearch}
-            queryPlaceholder = "Search products"
-          />
+      <Card title="Choose product to add accesories to">
+        <div style={{ padding: "16px", display: "flex" }}>
+          <div style={{ flex: 1 }}>
+            <Filters
+              queryValue={queryValue}
+              filters={filters}
+              onQueryChange={setNewProductsFromSearch}
+              queryPlaceholder="Search products"
+            />
+          </div>
         </div>
-      </div>
-      <IndexTable
-        itemCount={products.length}
-        onSelectionChange={handleSelectionChange}
-        hasMoreItems
-        emptyState={loadingMarkup}
-        selectable={false}
-        headings={[
-          { title: "" },
-          { title: "Products" },
-         
-        ]}
-      >
-        {rowMarkup}
-        {loadingMarkup}
-      </IndexTable>
-      <div style={{ paddingBottom: "20px" }}>
-        <Stack alignment="center" distribution="center">
-          <Pagination
-            hasNext={true}
-            hasPrevious={true}
-            onNext={() => handlePageChange(currentPage + 1)}
-            onPrevious={() => handlePageChange(currentPage - 1)}
-          />
-        </Stack>
-      </div>
-    </Card>
+        <IndexTable
+          itemCount={products.length}
+          onSelectionChange={handleSelectionChange}
+          hasMoreItems
+          emptyState={loadingMarkup}
+          selectable={false}
+          hasZebraStriping={true}
+          headings={[
+            { title: "" },
+            { title: "Products" },
+            { title: "Accessories" },
+          ]}
+        >
+          {rowMarkup}
+          {loadingMarkup}
+        </IndexTable>
+        <div style={{ paddingBottom: "20px" }}>
+          <Stack alignment="center" distribution="center">
+            <Pagination
+              hasNext={true}
+              hasPrevious={true}
+              onNext={() => handlePageChange(currentPage + 1)}
+              onPrevious={() => handlePageChange(currentPage - 1)}
+            />
+          </Stack>
+        </div>
+      </Card>
     </>
   );
 }

@@ -14,7 +14,7 @@ import {
   export default function index() {
     return (
       <Page 
-      narrowWidth
+      fullWidth
       divider = {false}
       >
         <TitleBar title="Product Accesories" primaryAction={null} />
