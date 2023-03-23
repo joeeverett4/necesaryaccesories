@@ -7,17 +7,22 @@ import {
   Thumbnail,
   Link,
   SkeletonBodyText,
+  SkeletonDisplayText,
+  SkeletonThumbnail,
   Stack,
   Heading,
   Icon,
+  Spinner
 } from "@shopify/polaris";
 import { ImageMajor } from "@shopify/polaris-icons";
 import { useNavigate } from "@shopify/app-bridge-react";
 import { useState, useEffect, useCallback } from "react";
 import { useAuthenticatedFetch } from "../hooks";
+import "../assets/style.css"
 
 export function Productlistmain() {
   const [products, setProducts] = useState([]);
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -82,19 +87,79 @@ export function Productlistmain() {
           };
           let costa = getNodesFromConnections(products);
 
-          setProducts(costa);
+        // Wait for all API calls to resolve
+        Promise.all(
+          costa.map((c) =>
+            fetch(`/api/accessories/${c.id.split("/").pop()}`)
+              .then((response) => response.json())
+              .then((imgs) => {
+                const destructuredimgs = imgs.map(
+                  (obj) => obj[Object.keys(obj)[0]]
+                );
+                return { ...c, imgs: destructuredimgs };
+              })
+          )
+        ).then((updatedCosta) => {
+          console.log(updatedCosta);
+          setProducts(updatedCosta);
+          setIsLoading(false);
           console.log(products.pageInfo);
           setNextUrl(products.pageInfo.endCursor);
           window.scrollTo(0, 0);
+        });
+          
         });
     }
   }, [currentPage]);
 
   const loadingMarkup = isLoading ? (
     <>
-      <SkeletonBodyText />
-    </>
+  <IndexTable.Row>
+   <IndexTable.Cell className = "w-10" >  
+  <SkeletonThumbnail />
+</IndexTable.Cell>
+<IndexTable.Cell className = "w-70" >
+  <SkeletonBodyText />
+</IndexTable.Cell>  
+<IndexTable.Cell className = "w-20" >  
+<Stack>
+<SkeletonThumbnail />
+<SkeletonThumbnail />
+</Stack>
+</IndexTable.Cell>  
+</IndexTable.Row>
+<IndexTable.Row>
+   <IndexTable.Cell className = "w-10" >  
+  <SkeletonThumbnail />
+</IndexTable.Cell>
+<IndexTable.Cell className = "w-70" >
+  <SkeletonBodyText />
+</IndexTable.Cell>  
+<IndexTable.Cell className = "w-20" >  
+<Stack>
+<SkeletonThumbnail />
+<SkeletonThumbnail />
+</Stack>
+</IndexTable.Cell>  
+</IndexTable.Row>
+   <IndexTable.Row>
+   <IndexTable.Cell className = "w-10" >  
+  <SkeletonThumbnail />
+</IndexTable.Cell>
+<IndexTable.Cell className = "w-70" >
+  <SkeletonBodyText />
+</IndexTable.Cell>  
+<IndexTable.Cell className = "w-20" >  
+<Stack>
+<SkeletonThumbnail />
+<SkeletonThumbnail />
+</Stack>
+</IndexTable.Cell>  
+</IndexTable.Row>
+</>
   ) : null;
+
+  
 
   const { selectedResources, allResourcesSelected, handleSelectionChange } =
     useIndexResourceState();
@@ -115,13 +180,33 @@ export function Productlistmain() {
           return response.json();
         })
         .then((products) => {
+          setIsLoading(true);
           const getNodesFromConnections = (connections) => {
             if (!connections) return [];
             return products.edges.map(({ node }) => node);
           };
           let costa = getNodesFromConnections(products);
 
-          setProducts(costa);
+           // Wait for all API calls to resolve
+        Promise.all(
+          costa.map((c) =>
+            fetch(`/api/accessories/${c.id.split("/").pop()}`)
+              .then((response) => response.json())
+              .then((imgs) => {
+                const destructuredimgs = imgs.map(
+                  (obj) => obj[Object.keys(obj)[0]]
+                );
+                return { ...c, imgs: destructuredimgs };
+              })
+          )
+        ).then((updatedCosta) => {
+          console.log(updatedCosta);
+          setProducts(updatedCosta);
+          setIsLoading(false)
+          
+        });
+
+        
         });
     }
   };
@@ -183,7 +268,7 @@ export function Productlistmain() {
           itemCount={products.length}
           onSelectionChange={handleSelectionChange}
           hasMoreItems
-          emptyState={loadingMarkup}
+          emptyState={<SkeletonBodyText />}
           selectable={false}
           hasZebraStriping={true}
           headings={[
