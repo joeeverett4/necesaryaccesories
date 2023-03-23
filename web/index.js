@@ -43,6 +43,32 @@ app.get("/api/product/count", async (req, res) => {
   res.send(countproducts);
 });
 
+app.get("/api/themes", async (req, res) => {
+ 
+ const themes =  await shopify.api.rest.Theme.all({
+    session: res.locals.shopify.session,
+  });
+  
+
+
+  res.send(themes);
+});
+
+app.get("/api/assets/:id", async (req, res) => {
+ 
+  const id = req.params.id;
+ const assets =  await shopify.api.rest.Asset.all({
+    session: res.locals.shopify.session,
+    theme_id: id,
+  });
+   
+ console.log(typeof assets)
+ 
+   res.send(assets);
+ });
+
+
+
 // Parent product
 app.get("/api/product/:productId", async (req, res) => {
   try {
