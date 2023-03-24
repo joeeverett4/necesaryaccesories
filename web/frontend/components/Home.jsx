@@ -7,108 +7,53 @@ import {
     Subheading,
     TextContainer,
     TextField,
-    Link
+    Link,
+    List
   } from "@shopify/polaris";
   import "../assets/style.css"
-
+  import { useEffect, useState } from "react";
+  import { useAuthenticatedFetch } from "../hooks";
+  import { useNavigate } from "@shopify/app-bridge-react";
   import { CircleInformationMajor } from "@shopify/polaris-icons";
 
 export function Home() {
+
+  const navigate = useNavigate();
+  const fetch = useAuthenticatedFetch();
+  const [numberofproductacccesories, setnumberofproductaccessories] = useState("")
+  const [numberofcollectionacccesories, setnumberofcollectionaccessories] = useState("")
+    useEffect(() => {
+     const count = fetch("/api/accessoriescount")
+     .then((response) => {
+      return response.json();
+    })
+    .then((count) => {
+      console.log(count)
+       const stringifyproductcount = count.product_count.toString()
+       const stringifycollectioncount = count.collection_count.toString()
+      setnumberofproductaccessories(stringifyproductcount)
+      setnumberofcollectionaccessories(stringifycollectioncount)
+    })
+    },[])
+  
+  
   return (
     <Layout>
       <Layout.Section primary>
-        <Card title="Setup Instructions" sectioned>
+        <Card title="Welcome to App Magic : Accesories" 
+        sectioned
+        secondaryFooterActions={[{content: 'Add Collection assigned Accesories'}]}
+        primaryFooterAction={{content: 'Add Product assigned Accesories'}}
+        >
           <Stack spacing="loose" vertical={true}>
             <TextContainer>
-              <div className="d-flex">
-                <h4>1. Add from the tags below to create your product title</h4>
-                <div className="Tags-row">
-                  <div className="Tags-button">Product Title</div>
+            <p>Here are the Accesories you have showing on your store</p>
+          
+            <List type = "bullet">
+              <List.Item>You have <b> {numberofproductacccesories} </b> accesories assign to individual products </List.Item>
+              <List.Item>You have <b> {numberofcollectionacccesories} </b> accesories assign to collections </List.Item>
+            </List>
 
-                  <div className="Tags-button">Product Vendor</div>
-                  <div className="Tags-button">Product Type</div>
-                  <div className="Tags-button">Product Variant</div>
-                  <div className="Tags-button">Custom Message</div>
-                </div>
-                <h4>
-                  2. You can drag and drop to change the order of the different
-                  elements
-                </h4>
-                <div className="Tags-row">
-                <div style = {{display:"flex"}}>
-                  <div className="Tags-button">
-                    Product Vendor
-                    <span className="svg--container">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                        focusable="false"
-                        role="presentation"
-                        className="icon icon-close"
-                        fill="none"
-                        viewBox="0 0 18 17"
-                      >
-                        <path
-                          d="M.865 15.978a.5.5 0 00.707.707l7.433-7.431 7.579 7.282a.501.501 0 00.846-.37.5.5 0 00-.153-.351L9.712 8.546l7.417-7.416a.5.5 0 10-.707-.708L8.991 7.853 1.413.573a.5.5 0 10-.693.72l7.563 7.268-7.418 7.417z"
-                          fill="currentColor"
-                        ></path>
-                      </svg>
-                    </span>
-                  </div>
-                  <span class = "arrow-vertical">&#8693;</span>
-                  <span class = "arrow-horizontal">&#8644;</span>
-                  </div>
-                  
-                  
-                  <div style = {{display:"flex"}}>
-                  <div className="Tags-button">
-                    Product Variant
-                    <span className="svg--container">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                        focusable="false"
-                        role="presentation"
-                        className="icon icon-close"
-                        fill="none"
-                        viewBox="0 0 18 17"
-                      >
-                        <path
-                          d="M.865 15.978a.5.5 0 00.707.707l7.433-7.431 7.579 7.282a.501.501 0 00.846-.37.5.5 0 00-.153-.351L9.712 8.546l7.417-7.416a.5.5 0 10-.707-.708L8.991 7.853 1.413.573a.5.5 0 10-.693.72l7.563 7.268-7.418 7.417z"
-                          fill="currentColor"
-                        ></path>
-                      </svg>
-                    </span>
-                  </div>
-                  <span class = "arrow-vertical">&#8693;</span>
-                  <span class = "arrow-horizontal">&#8644;</span>
-                  </div>
-                  
-                  <div style = {{display:"flex"}}>
-                  <div className="Tags-button">
-                    Custom Message
-                    <span className="svg--container">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                        focusable="false"
-                        role="presentation"
-                        className="icon icon-close"
-                        fill="none"
-                        viewBox="0 0 18 17"
-                      >
-                        <path
-                          d="M.865 15.978a.5.5 0 00.707.707l7.433-7.431 7.579 7.282a.501.501 0 00.846-.37.5.5 0 00-.153-.351L9.712 8.546l7.417-7.416a.5.5 0 10-.707-.708L8.991 7.853 1.413.573a.5.5 0 10-.693.72l7.563 7.268-7.418 7.417z"
-                          fill="currentColor"
-                        ></path>
-                      </svg>
-                    </span>
-                  </div>
-                  <span class = "arrow-vertical">&#8693;</span>
-                  <span class = "arrow-horizontal">&#8644;</span>
-                </div>
-              </div>
-              </div>
             </TextContainer>
           </Stack>
         </Card>

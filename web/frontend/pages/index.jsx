@@ -12,12 +12,13 @@ import { TitleBar } from "@shopify/app-bridge-react";
 import { Home } from "../components";
 
 export default function HomePage() {
+  const primaryAction = {content: 'Installation instructions', url: '/installation'};
   return (
     <Page 
     fullWidth
     divider = {false}
     >
-      <TitleBar title="App Magic : Accessories" primaryAction={null} />
+      <TitleBar title="App Magic : Accessories" primaryAction={primaryAction} />
       <Layout>
         <Layout.Section>
          <Home />

@@ -89,6 +89,10 @@ export function Installation() {
    </Card.Section>
    </Card> ) :
    null ;
+
+   const button = isAcceptableTheme ? (
+    <Button primary onClick = {() => navigate("/")}>Continue</Button>
+   ) : null ;
    
 
   return (
@@ -111,7 +115,7 @@ export function Installation() {
     </Layout.Section>
 
     <Layout.Section>
-    <Button primary onClick = {() => navigate("/")}>Continue</Button>
+    {button}
     </Layout.Section>
 
    
