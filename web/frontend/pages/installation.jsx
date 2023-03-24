@@ -17,7 +17,8 @@ import {
 
     return (
       <Page 
-      fullWidth
+      narrowWidth
+
       divider = {false}
       >
         <TitleBar title="Installation instructions" primaryAction={null} />
