@@ -5,6 +5,7 @@ import {
     Banner,
     Layout,
     Button,
+    SkeletonBodyText
     
   } from "@shopify/polaris";
   import { useState, useEffect, useCallback } from "react";
@@ -12,35 +13,46 @@ import {
   import { useNavigate } from "@shopify/app-bridge-react";
 
 export function Installation() {
-
   const navigate = useNavigate();
   const fetch = useAuthenticatedFetch();
-  const [themelist, updateThemeList] = useState([])
+  const [themelist, updateThemeList] = useState([]);
+  const [sortedArray, setSortedArray] = useState([]);
+  const [isloading, setisLoading ] = useState(true)
   const [selected, setSelected] = useState("");
-  const [isAcceptableTheme, checkIfIsAcceptableTheme] = useState(false)
+  const [isAcceptableTheme, checkIfIsAcceptableTheme] = useState(false);
 
   useEffect(() => {
-
-
-    const themes = fetch("/api/themes")
-    .then((response) => {
-      return response.json();
-    })
-    .then((themes) => {
-      console.log("hii")
-      themes.map(theme =>{
-        const id = theme.id.toString()
-        const themedetails = {
-          label : theme.name,
-          value: id
-        }
-       if(themelist.length == 0){
-        updateThemeList(prevItems => [...prevItems, themedetails]);
-       } 
+    fetch("/api/themes")
+      .then((response) => {
+        return response.json();
       })
-    })
-    
-  },[])
+      .then((themes) => {
+        console.log("hii");
+        themes.map((theme) => {
+          const id = theme.id.toString();
+          const themedetails = {
+            label: theme.name,
+            value: id,
+            role: theme.role,
+          };
+
+          updateThemeList((prevItems) => [...prevItems, themedetails]);
+        });
+      });
+  }, []);
+
+  useEffect(() => {
+    if (themelist.length) {
+      const newSortedArray = themelist.sort((a, b) => {
+        if (a.role === "main") return -1;
+        if (b.role === "main") return 1;
+        return 0;
+      });
+      setSortedArray(newSortedArray);
+    }
+  }, [themelist]);
+
+
 
  
   const handleSelectChange = useCallback((value) => {
@@ -95,31 +107,25 @@ export function Installation() {
    ) : null ;
    
 
-  return (
+   return (
     <Layout>
-      
-    <Layout.Section>
-     <Select
-     label="Select a theme to add accessories"
-     options={themelist}
-     onChange={handleSelectChange}
-     value={selected}
-   />
-   </Layout.Section>
-   <Layout.Section>
- {banner}
- </Layout.Section>
-
- <Layout.Section>
-    {info}
-    </Layout.Section>
-
-    <Layout.Section>
-    {button}
-    </Layout.Section>
-
-   
-
-</Layout>
-  )
-}
+      {isloading ? (
+        <SkeletonBodyText />
+      ) : (
+        <>
+          <Layout.Section>
+            <Select
+              label="Select a theme to add accessories"
+              options={sortedArray}
+              onChange={handleSelectChange}
+              value={selected}
+            />
+          </Layout.Section>
+          <Layout.Section>{banner}</Layout.Section>
+          <Layout.Section>{info}</Layout.Section>
+          <Layout.Section>{button}</Layout.Section>
+        </>
+      )}
+    </Layout>
+  );
+};

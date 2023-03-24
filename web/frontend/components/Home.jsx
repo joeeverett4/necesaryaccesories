@@ -42,8 +42,8 @@ export function Home() {
       <Layout.Section primary>
         <Card title="Welcome to App Magic : Accesories" 
         sectioned
-        secondaryFooterActions={[{content: 'Add Collection assigned Accesories'}]}
-        primaryFooterAction={{content: 'Add Product assigned Accesories'}}
+        secondaryFooterActions={[{content: 'Add Collection assigned Accesories', onAction: () => navigate("/collections")}]}
+        primaryFooterAction={{content: 'Add Product assigned Accesories', onAction: () => navigate("/products")}}
         >
           <Stack spacing="loose" vertical={true}>
             <TextContainer>
