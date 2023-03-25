@@ -10,7 +10,9 @@ import {
   Button,
   TextStyle,
   Layout,
-  Thumbnail
+  Thumbnail,
+  SkeletonBodyText,
+  SkeletonDisplayText
   
 } from "@shopify/polaris";
 import "../assets/style.css"
@@ -51,7 +53,7 @@ export function Collection() {
     const handleSelectionChange = (resources) => {
       const ids = resources.selection.map((product) => product.id);
     
-      fetch(`/api/collections/meta`, {
+      fetch(`/api/collection/meta`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -105,6 +107,35 @@ export function Collection() {
       setResourcePickerOpen(false);
     };
 
+    const handleDeleteProducts = () => {
+      console.log("handleDeletedProducts")
+
+      fetch(`/api/products/remove`, {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json",
+       },
+       body: JSON.stringify({
+         id: lastPart,
+       }),
+     })
+       .then((res) => res.json())
+       .then((data) => {
+         fetch(`/api/products/db/${lastPart}`, { method: 'DELETE' })
+           .then((response) => {
+             setProducts([]);
+            })
+           .catch((error) => {
+             console.error(error);
+           });
+       
+       })
+       .catch((error) => {
+         console.error(error);
+       });
+     
+    }
+
 
 
   
@@ -118,6 +149,7 @@ export function Collection() {
     <Card
         title= {parentCollection.title}
         sectioned
+        secondaryFooterActions={[{content: 'Delete Accessories', destructive : true, onAction: () => handleDeleteProducts(),}]}
         primaryFooterAction={{
           content: "Select Accessories",
           onAction: () => setResourcePickerOpen(true),
@@ -170,8 +202,21 @@ export function Collection() {
       {toastMarkup}
       </>
     ) : (
-      <p>Loading</p>
-    )
+        <Layout>
+        <Layout.Section oneHalf>
+      <Card
+          title= {<SkeletonDisplayText />}
+          sectioned
+        >
+          <TextContainer spacing="loose">
+          <SkeletonBodyText />
+          </TextContainer>
+        </Card>
+        </Layout.Section>
+        <Layout.Section oneHalf>
+        </Layout.Section>
+        </Layout>
+      )
 }
     </>
   );
