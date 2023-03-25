@@ -5,7 +5,10 @@ import {
     Banner,
     Layout,
     Button,
-    SkeletonBodyText
+    SkeletonBodyText,
+    Spinner,
+    Stack,
+    Heading
     
   } from "@shopify/polaris";
   import { useState, useEffect, useCallback } from "react";
@@ -18,6 +21,7 @@ export function Installation() {
   const [themelist, updateThemeList] = useState([]);
   const [sortedArray, setSortedArray] = useState([]);
   const [isloading, setisLoading ] = useState(true)
+  const [isSpinning, setisSpinning] = useState(false)
   const [selected, setSelected] = useState("");
   const [isAcceptableTheme, checkIfIsAcceptableTheme] = useState(false);
 
@@ -26,37 +30,42 @@ export function Installation() {
       .then((response) => {
         return response.json();
       })
-      .then((themes) => {
+      .then((sortedThemes) => {
         console.log("hii");
-        themes.map((theme) => {
+  
+        const newThemeList = sortedThemes.map((theme) => {
           const id = theme.id.toString();
           const themedetails = {
             label: theme.name,
             value: id,
             role: theme.role,
           };
-
-          updateThemeList((prevItems) => [...prevItems, themedetails]);
+          return themedetails;
         });
+  
+        updateThemeList(newThemeList);
+     
       });
   }, []);
 
   useEffect(() => {
-    if (themelist.length) {
-      const newSortedArray = themelist.sort((a, b) => {
-        if (a.role === "main") return -1;
-        if (b.role === "main") return 1;
-        return 0;
-      });
-      setSortedArray(newSortedArray);
+    if (themelist.length > 0) {
+      handleSelectChange(themelist[0].value);
+     
     }
   }, [themelist]);
 
+
+const spinner = isSpinning ? (
+<Spinner accessibilityLabel="Small spinner example" size="small" />
+
+) : null;
 
 
  
   const handleSelectChange = useCallback((value) => {
     setSelected(value);
+    setisSpinning(true)
     const asset = fetch(`/api/assets/${value}`)
     .then((response) => {
       return response.json();
@@ -68,6 +77,10 @@ export function Installation() {
       );
       console.log(istwopointoh)
       checkIfIsAcceptableTheme(istwopointoh)
+    })
+    .then((load) => {
+      setisLoading(false);
+      setisSpinning(false)
     })
   }, []);
 
@@ -114,12 +127,23 @@ export function Installation() {
       ) : (
         <>
           <Layout.Section>
+          <Heading>Select a theme to add accessories to </Heading>
+          </Layout.Section>
+          <Layout.Section>
+            
+            <Stack spacing="loose" alignment = "center">
+              <Stack.Item fill>
             <Select
-              label="Select a theme to add accessories"
-              options={sortedArray}
+              label=""
+              options={themelist}
               onChange={handleSelectChange}
               value={selected}
             />
+            </Stack.Item>
+            <Stack.Item>
+            {spinner}
+            </Stack.Item>
+            </Stack>
           </Layout.Section>
           <Layout.Section>{banner}</Layout.Section>
           <Layout.Section>{info}</Layout.Section>

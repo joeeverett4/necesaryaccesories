@@ -74,9 +74,13 @@ app.get("/api/themes", async (req, res) => {
     session: res.locals.shopify.session,
   });
   
+  const sortedthemes = themes.sort((a, b) => {
+    if (a.role === "main") return -1;
+    if (b.role === "main") return 1;
+    return 0;
+  });
 
-
-  res.send(themes);
+  res.send(sortedthemes);
 });
 
 app.get("/api/assets/:id", async (req, res) => {
