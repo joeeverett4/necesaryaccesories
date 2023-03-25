@@ -36,7 +36,7 @@ export function Product() {
 
   useEffect(() => {
      
-    fetch(`/api/product/${lastPart}`)
+    fetch(`/api/products/${lastPart}`)
       .then(response => response.json())
       .then(product => {
        setParentProduct(product)

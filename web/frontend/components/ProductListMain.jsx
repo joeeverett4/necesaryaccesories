@@ -34,13 +34,6 @@ export function Productlistmain() {
 
   useEffect(() => {
     console.log("USEEFFECTs");
-    fetch("/api/product/count")
-      .then((response) => response.text())
-      .then((totalCount) => {
-        // Calculate the total number of pages
-        const Pages = Math.ceil(totalCount / productsPerPage);
-        setTotalPages(Pages);
-      });
     if (nextUrl == "") {
       console.log("FIRSTPRODUCTS");
       fetch("/api/firstproducts")

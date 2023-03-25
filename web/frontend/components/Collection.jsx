@@ -33,7 +33,7 @@ export function Collection() {
 
   useEffect(() => {
      
-    fetch(`/api/collection/${lastPart}`)
+    fetch(`/api/collections/${lastPart}`)
       .then(response => response.json())
       .then(collection => {
        setParentCollection(collection)
@@ -51,7 +51,7 @@ export function Collection() {
     const handleSelectionChange = (resources) => {
       const ids = resources.selection.map((product) => product.id);
     
-      fetch(`/api/collection/meta`, {
+      fetch(`/api/collections/meta`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
