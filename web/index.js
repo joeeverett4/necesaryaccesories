@@ -46,6 +46,53 @@ app.use("/api", shopify.validateAuthenticatedSession(), misc);
 
 
 
+app.get("/api/test/firstproducts", async (req, res) => {
+  try {
+      console.log("HELOO")
+    const client = new shopify.api.clients.Graphql({
+      session: res.locals.shopify.session,
+    });
+    const data = await client.query({
+      data: `query {
+     products(first: 25, sortKey:TITLE) {
+       edges {
+         node {
+           id
+           title
+           handle
+           vendor
+           images(first: 1) {
+             edges {
+               node {
+                 originalSrc
+               }
+             }
+           }
+           variants(first: 1) {
+             nodes {
+               price
+             }
+           }
+           
+           
+         }
+         
+         cursor
+       }
+       pageInfo {
+         hasNextPage
+         endCursor
+       }
+     }
+   }`,
+    });
+    res.json(data.body.data.products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 app.use(serveStatic(STATIC_PATH, { index: false }));
 
 app.use("/*", shopify.ensureInstalledOnShop(), async (_req, res, _next) => {

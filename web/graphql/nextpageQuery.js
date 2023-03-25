@@ -1,5 +1,5 @@
 const nextpageQuery = `query {
-    products(first: 25, after: "${cursor}", sortKey: TITLE) {
+    products(first: 25, after: $cursor, sortKey: TITLE) {
       edges {
         node {
           id

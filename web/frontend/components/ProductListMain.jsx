@@ -36,7 +36,7 @@ export function Productlistmain() {
     console.log("USEEFFECTs");
     if (nextUrl == "") {
       console.log("FIRSTPRODUCTS");
-      fetch("/api/firstproducts")
+      fetch("/api/test/firstproducts")
         .then((response) => {
           return response.json();
         })
@@ -69,7 +69,7 @@ export function Productlistmain() {
         });
     } else {
       // Fetch the products for the current page
-      fetch(`/api/products/${nextUrl}`)
+      fetch(`/api/products/cursor/${nextUrl}`)
         .then((response) => {
           return response.json();
         })

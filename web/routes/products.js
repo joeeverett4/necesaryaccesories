@@ -1,10 +1,13 @@
 // productEndpoints.js
 
 import express from "express";
-import shopify from "./shopify.js";
+import shopify from "../shopify.js";
 import nextpageQuery from "../graphql/nextpagequery.js";
+import sqlite3 from "sqlite3";
 
 const router = express.Router();
+
+const db = new sqlite3.Database("database.sqlite");
 
 // Get product by ID
 router.get("/:productId", async (req, res) => {
@@ -22,7 +25,7 @@ router.get("/:productId", async (req, res) => {
 });
 
 // Endpoint to get a page of products
-router.get("/:cursor", async (req, res) => {
+router.get("/cursor/:cursor", async (req, res) => {
     try {
       const cursor = req.params.cursor;
   
@@ -31,9 +34,8 @@ router.get("/:cursor", async (req, res) => {
       });
       console.log(cursor);
       const data = await client.query({
-        data: nextpageQuery,
+        data: "query { products(first: 25, after: " + cursor + ", sortKey: TITLE) { ... } }"
       });
-  
       
   
       res.json(data.body.data.products);
@@ -65,7 +67,7 @@ router.get("/:cursor", async (req, res) => {
     res.status(200).send(metafield);
   });
 
-  app.post("/remove", async (_req, res) => {
+   router.post("/remove", async (_req, res) => {
     const { id } = _req.body;
     let result = [];
   
@@ -106,6 +108,7 @@ router.get("/:cursor", async (req, res) => {
     );
   });
 
+
   router.post("/db", async (_req, res) => {
     const shop = res.locals.shopify.session.shop;
     const { title, product_id, image, description, sequence } = _req.body; // extract values from request body
@@ -138,6 +141,8 @@ router.get("/:cursor", async (req, res) => {
       }
     });
   });
+
+
 
 
 // Add more endpoints related to products

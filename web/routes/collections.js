@@ -2,14 +2,15 @@
 
 import express from "express";
 import collectionsQuery from "../graphql/collectionsQuery.js";
-import shopify from "./shopify.js";
+import shopify from "../shopify.js";
+import sqlite3 from "sqlite3";
 
 const router = express.Router();
 
 
+const db = new sqlite3.Database("database.sqlite");
 
-
-router.get("/api/collections", async (req, res) => {
+router.get("/", async (req, res) => {
     const client = new shopify.api.clients.Graphql({
       session: res.locals.shopify.session,
     });
@@ -35,7 +36,7 @@ router.get("/api/collections", async (req, res) => {
   });
 
 
-router.post("/api/collection/meta", async (_req, res) => {
+router.post("/meta", async (_req, res) => {
     const { items, id } = _req.body;
     let result = [];
   
