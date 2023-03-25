@@ -1,6 +1,7 @@
 // productEndpoints.js
 
 import express from "express";
+import collectionsQuery from "../graphql/collectionsQuery.js";
 import shopify from "./shopify.js";
 
 const router = express.Router();
@@ -13,26 +14,7 @@ router.get("/api/collections", async (req, res) => {
       session: res.locals.shopify.session,
     });
     const data = await client.query({
-      data: `query {
-      collections(first: 100) {
-        edges {
-          node {
-            id
-            title
-            handle
-            image{url}
-            productsCount
-            ruleSet{
-              rules{
-                  column
-                  relation
-                  condition
-              }
-            }
-          }
-        }
-      }
-    }`,
+      data: collectionsQuery,
     });
     
     res.json(data.body.data.collections);
