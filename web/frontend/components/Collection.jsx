@@ -35,7 +35,7 @@ export function Collection() {
 
   useEffect(() => {
      
-    fetch(`/api/collections/${lastPart}`)
+    fetch(`/api/collection/${lastPart}`)
       .then(response => response.json())
       .then(collection => {
        setParentCollection(collection)

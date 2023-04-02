@@ -23,6 +23,18 @@ export function Home() {
   const [numberofproductacccesories, setnumberofproductaccessories] = useState("")
   const [numberofcollectionacccesories, setnumberofcollectionaccessories] = useState("")
     useEffect(() => {
+
+     fetch("/api/checkiffirstvisit")
+     .then((response) => {
+      return response.json();
+    })
+    .then((redirect) => {
+      console.log(redirect.hasVisited)
+      if(redirect.hasVisited == false){
+      navigate('/installation')
+      }
+    })
+
      const count = fetch("/api/accessoriescount")
      .then((response) => {
       return response.json();

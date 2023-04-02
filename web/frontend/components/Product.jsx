@@ -36,7 +36,7 @@ export function Product() {
 
   useEffect(() => {
      
-    fetch(`/api/products/${lastPart}`)
+    fetch(`/api/product/${lastPart}`)
       .then(response => response.json())
       .then(product => {
        setParentProduct(product)
@@ -157,7 +157,7 @@ export function Product() {
         }}
       >
         <TextContainer spacing="loose">
-        <img src={parentProduct.image.src} />
+        <img src={parentProduct?.image.src} />
           
         </TextContainer>
       </Card>

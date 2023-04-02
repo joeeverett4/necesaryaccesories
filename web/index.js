@@ -68,6 +68,40 @@ app.get("/api/accessoriescount", (req, res) => {
   });
 })
 
+app.get("/api/checkiffirstvisit", (req, res) => {
+  const shopifyDomain = res.locals.shopify.session.shop
+  const query = "SELECT * FROM visitors WHERE shopify_domain = ?";
+  const params = [shopifyDomain];
+
+  db.get(query, params, (err, row) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send("Server error");
+      return;
+    }
+
+    if (row) {
+      // Row with matching shopify_domain already exists
+      const hasVisited = !!row.has_visited;
+      res.send({ hasVisited });
+    } else {
+      // Row with matching shopify_domain doesn't exist, create a new one
+      const query = "INSERT INTO visitors (shopify_domain, has_visited) VALUES (?, 1)";
+      const params = [shopifyDomain];
+
+      db.run(query, params, (err) => {
+        if (err) {
+          console.error(err.message);
+          res.status(500).send("Server error");
+          return;
+        }
+
+        res.send({ hasVisited: false });
+      });
+    }
+  });
+})
+
 app.get("/api/themes", async (req, res) => {
  
  const themes =  await shopify.api.rest.Theme.all({
@@ -175,6 +209,21 @@ app.get("/api/firstproducts", async (req, res) => {
     });
 
     res.json(data.body.data.products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Parent product
+app.get("/api/product/:productId", async (req, res) => {
+  try {
+    console.log(req.params.productId);
+    const productreturn = await shopify.api.rest.Product.find({
+      session: res.locals.shopify.session,
+      id: req.params.productId,
+    });
+
+    res.json(productreturn);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
