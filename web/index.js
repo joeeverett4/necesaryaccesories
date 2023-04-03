@@ -7,6 +7,9 @@ import sqlite3 from "sqlite3";
 import shopify from "./shopify.js";
 import productCreator from "./product-creator.js";
 import GDPRWebhookHandlers from "./gdpr.js";
+import themes from "./routes/themes.js";
+import count from "./routes/count.js"
+import product from "./routes/product.js"
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
@@ -42,7 +45,8 @@ app.get("/api/product/count", async (req, res) => {
 
   res.send(countproducts);
 });
-
+app.use("/api/accessoriescount", count)
+/*
 app.get("/api/accessoriescount", (req, res) => {
   const query = `
     WITH unique_values AS (
@@ -67,6 +71,7 @@ app.get("/api/accessoriescount", (req, res) => {
     }
   });
 })
+*/
 
 app.get("/api/checkiffirstvisit", (req, res) => {
   const shopifyDomain = res.locals.shopify.session.shop
@@ -101,7 +106,7 @@ app.get("/api/checkiffirstvisit", (req, res) => {
     }
   });
 })
-
+/*
 app.get("/api/themes", async (req, res) => {
  
  const themes =  await shopify.api.rest.Theme.all({
@@ -116,6 +121,9 @@ app.get("/api/themes", async (req, res) => {
 
   res.send(sortedthemes);
 });
+*/
+
+app.use("/api/themes", themes)
 
 app.get("/api/assets/:id", async (req, res) => {
  
@@ -133,6 +141,8 @@ app.get("/api/assets/:id", async (req, res) => {
 
 
 // Parent product
+app.use("/api/product", product)
+/*
 app.get("/api/product/:productId", async (req, res) => {
   try {
     console.log(req.params.productId);
@@ -146,7 +156,7 @@ app.get("/api/product/:productId", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
+*/
 //parent collection
 
 app.get("/api/collection/:collectionId", async (req, res) => {
@@ -214,20 +224,7 @@ app.get("/api/firstproducts", async (req, res) => {
   }
 });
 
-// Parent product
-app.get("/api/product/:productId", async (req, res) => {
-  try {
-    console.log(req.params.productId);
-    const productreturn = await shopify.api.rest.Product.find({
-      session: res.locals.shopify.session,
-      id: req.params.productId,
-    });
 
-    res.json(productreturn);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
 // Endpoint to get a page of products
 app.get("/api/products/:cursor", async (req, res) => {
