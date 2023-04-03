@@ -10,6 +10,7 @@ import {
 } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
 import { Home } from "../components";
+import { Chart } from "../components";
 
 export default function HomePage() {
   const primaryAction = {content: 'Installation instructions', url: '/installation'};
@@ -22,6 +23,7 @@ export default function HomePage() {
       <Layout>
         <Layout.Section>
          <Home />
+         <Chart />
         </Layout.Section>
       </Layout>
     </Page>
