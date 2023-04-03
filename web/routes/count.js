@@ -4,9 +4,13 @@ import sqlite3 from "sqlite3";
 
 const router = Router();
 
-const db = new sqlite3.Database("../database.sqlite");
+const db = new sqlite3.Database("/Users/joeeverett/desktop/neccesaryaccesories/neccesaryaccesories/web/databasetwo.sqlite");
   
   router.get("/", async (req, res) => {
+      console.log("HELLOOOO")
+
+      console.log("Connected to database:", db.filename);
+     
     const query = `
     WITH unique_values AS (
       SELECT DISTINCT product_id
@@ -29,6 +33,8 @@ const db = new sqlite3.Database("../database.sqlite");
       });
     }
   });
+  
+ 
   });
   
   export default router;
