@@ -1,10 +1,10 @@
 import { Router } from "express";
-import shopify from "../shopify.js";
+import shopify from "./shopify.js";
 import sqlite3 from "sqlite3";
 
 const router = Router();
 
-const db = new sqlite3.Database("/Users/joeeverett/desktop/neccesaryaccesories/neccesaryaccesories/web/databasetwo.sqlite");
+const db = new sqlite3.Database("databasetwo.sqlite");
 
 router.get("/:id", async (req, res) => {
     const product = req.params.id;

@@ -7,14 +7,15 @@ import sqlite3 from "sqlite3";
 import shopify from "./shopify.js";
 import productCreator from "./product-creator.js";
 import GDPRWebhookHandlers from "./gdpr.js";
-import themes from "./routes/themes.js";
-import product from "./routes/product.js";
-import collection from "./routes/collection.js";
-import firstproducts from "./routes/firstproducts.js"
-import query from "./routes/query.js"
-import count from "./routes/count.js"
-import accessories from "./routes/accessories.js"
-import products from "./routes/products.js"
+import { proxyVerification } from "./proxyAuth.js";
+import themes from "./themes.js";
+import product from "./product.js";
+import collection from "./collection.js";
+import firstproducts from "./firstproducts.js"
+import query from "./query.js"
+import count from "./count.js"
+import accessories from "./accessories.js"
+import products from "./products.js"
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
@@ -124,8 +125,33 @@ app.use("/api/accessoriescount", count)
 app.use("/api/products", products)
 
 
+app.post("/proxy", proxyVerification, (req, res) => {
+  const date = new Date().toISOString().slice(0, 10);
+  db.run(
+    "INSERT INTO clicks (date, count) VALUES (?, 1) ON CONFLICT(date) DO UPDATE SET count = count + 1",
+    [date],
+    (err) => {
+      if (err) {
+        console.error(err.message);
+        res.status(500).send("An error occurred while updating the database.");
+      } else {
+        res.status(200).send("Click data updated successfully.");
+      }
+    }
+  );
+});
 
-
+app.get("/api/clicks", (req, res) => {
+  const query = "SELECT date, SUM(count) AS count FROM clicks GROUP BY date";
+  db.all(query, [], (err, rows) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send("An error occurred while querying the database.");
+    } else {
+      res.json(rows);
+    }
+  });
+});
 
 
 

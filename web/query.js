@@ -1,5 +1,5 @@
 import { Router } from "express";
-import shopify from "../shopify.js";
+import shopify from "./shopify.js";
 
 const router = Router();
 

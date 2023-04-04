@@ -1,5 +1,23 @@
 window.onload = async function () {
 
+
+  fetch("/tools/alanna", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      // Request body data goes here
+    })
+  }).then((response) => {
+    return response.text();
+  }).then((text) => {
+    console.log(text);
+  }).catch((error) => {
+    console.error(error);
+  });
+
+  
   
    function sleep(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
@@ -9,6 +27,11 @@ window.onload = async function () {
 
   const buttonColor = document.querySelector(".outfoss-add-to-cart").style.color;
 
+  const clckcontainer = document.querySelector(".outfoss-product-grid")
+
+  clckcontainer.addEventListener("click", function(){
+    console.log("hippy")
+  })
    
   buttons.forEach(function (button, index) {
   
