@@ -1,6 +1,19 @@
 window.onload = async function () {
 
+  const targetclick = document.querySelector(".outfoss-product-grid")
 
+  fetch('/tools/alanna/info')
+  .then(response => response.json())
+  .then(data => {
+    console.log(data); // logs the rows returned by the endpoint
+  })
+  .catch(error => {
+    console.error(error);
+  });
+
+
+targetclick.addEventListener("click", function(){
+  console.log("targetClick")
   fetch("/tools/alanna", {
     method: "POST",
     headers: {
@@ -17,7 +30,7 @@ window.onload = async function () {
     console.error(error);
   });
 
-  
+})
   
    function sleep(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));

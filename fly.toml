@@ -1,18 +1,22 @@
-# fly.toml file generated for neccesaryaccessories on 2023-04-03T18:36:30+01:00
+# fly.toml file generated for outfossaccesories on 2023-04-04T10:15:43+01:00
 
-app = "neccesaryaccessories"
+app = "outfossaccesories"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
 [env]
+  PORT = "3000"
+  HOST = "https://outfossaccesories.fly.dev/"
+  SHOPIFY_API_KEY = "e9de60535fddd870bbcd866443009be0"
+  SCOPES = "write_products,read_products,read_themes"
 
 [experimental]
   auto_rollback = true
 
 [[services]]
   http_checks = []
-  internal_port = 8080
+  internal_port = 3000
   processes = ["app"]
   protocol = "tcp"
   script_checks = []

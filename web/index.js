@@ -42,6 +42,54 @@ app.post(
 // All endpoints after this point will require an active session
 app.use("/api/*", shopify.validateAuthenticatedSession());
 
+app.get("/proxy/info", proxyVerification, (req, res) => {
+  const sqlSelectAll = "SELECT * FROM clicks";
+
+db.all(sqlSelectAll, [], (err, rows) => {
+  if (err) {
+    console.error(err.message);
+    res.status(500).send("An error occurred while querying the database.");
+  } else {
+    res.json(rows);
+  }
+});
+})
+
+app.post("/proxy", proxyVerification, (req, res) => {
+  const date = new Date().toISOString().slice(0, 10);
+  const sqlSelect = "SELECT count FROM clicks WHERE date = ?";
+  const sqlInsert = "INSERT INTO clicks (date, count) VALUES (?, 1)";
+  const sqlUpdate = "UPDATE clicks SET count = count + 1 WHERE date = ?";
+
+  db.get(sqlSelect, [date], (err, row) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send("An error occurred while updating the database.");
+    } else if (row) {
+      // If the row exists, update the count column
+      db.run(sqlUpdate, [date], (err) => {
+        if (err) {
+          console.error(err.message);
+          res.status(500).send("An error occurred while updating the database.");
+        } else {
+          res.status(200).send("Click data updated successfully. Row exists");
+        }
+      });
+    } else {
+      // If the row does not exist, insert a new row
+      db.run(sqlInsert, [date], (err) => {
+        if (err) {
+          console.error(err.message);
+          res.status(500).send("An error occurred while updating the database.");
+        } else {
+          res.status(200).send("Click data updated successfully. Row created");
+        }
+      });
+    }
+  });
+});
+
+
 app.use(express.json());
 
 app.get("/api/product/count", async (req, res) => {
@@ -125,21 +173,7 @@ app.use("/api/accessoriescount", count)
 app.use("/api/products", products)
 
 
-app.post("/proxy", proxyVerification, (req, res) => {
-  const date = new Date().toISOString().slice(0, 10);
-  db.run(
-    "INSERT INTO clicks (date, count) VALUES (?, 1) ON CONFLICT(date) DO UPDATE SET count = count + 1",
-    [date],
-    (err) => {
-      if (err) {
-        console.error(err.message);
-        res.status(500).send("An error occurred while updating the database.");
-      } else {
-        res.status(200).send("Click data updated successfully.");
-      }
-    }
-  );
-});
+
 
 app.get("/api/clicks", (req, res) => {
   const query = "SELECT date, SUM(count) AS count FROM clicks GROUP BY date";
