@@ -9,7 +9,7 @@ import {
   Heading,
 } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
-import { Home } from "../components";
+import { ChartContainer, Home } from "../components";
 import { Chart } from "../components";
 
 export default function HomePage() {
@@ -23,7 +23,10 @@ export default function HomePage() {
       <Layout>
         <Layout.Section>
          <Home />
-         <Chart />
+         
+        </Layout.Section>
+        <Layout.Section>
+        <ChartContainer />
         </Layout.Section>
       </Layout>
     </Page>

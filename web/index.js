@@ -42,20 +42,9 @@ app.post(
 // All endpoints after this point will require an active session
 app.use("/api/*", shopify.validateAuthenticatedSession());
 
-app.get("/proxy/info", proxyVerification, (req, res) => {
-  const sqlSelectAll = "SELECT * FROM clicks";
 
-db.all(sqlSelectAll, [], (err, rows) => {
-  if (err) {
-    console.error(err.message);
-    res.status(500).send("An error occurred while querying the database.");
-  } else {
-    res.json(rows);
-  }
-});
-})
 
-app.post("/proxy", proxyVerification, (req, res) => {
+app.post("/api/proxy", proxyVerification, (req, res) => {
   const date = new Date().toISOString().slice(0, 10);
   const sqlSelect = "SELECT count FROM clicks WHERE date = ?";
   const sqlInsert = "INSERT INTO clicks (date, count) VALUES (?, 1)";
@@ -98,6 +87,33 @@ app.get("/api/product/count", async (req, res) => {
   });
 
   res.send(countproducts);
+});
+
+app.get("/api/info", (req, res) => {
+  const sqlSelectAll = "SELECT * FROM clicks WHERE date BETWEEN date('now') AND date('now', '+6 days') ORDER BY date ASC";
+
+db.all(sqlSelectAll, [], (err, rows) => {
+  if (err) {
+    console.error(err.message);
+    res.status(500).send("An error occurred while querying the database.");
+  } else {
+    console.log(rows)
+    res.json(rows);
+  }
+});
+})
+
+app.get("/api/total-clicks", (req, res) => {
+  const sqlSelectTotal = "SELECT SUM(count) as total FROM clicks WHERE date BETWEEN date('now') AND date('now', '+6 days')";
+  db.get(sqlSelectTotal, [], (err, row) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send("An error occurred while querying the database.");
+    } else {
+      console.log(row.total)
+      res.json(row.total);
+    }
+  });
 });
 
 
